@@ -13,9 +13,10 @@ const updateWarehouseSchema = z.object({
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -35,7 +36,7 @@ export async function GET(
           product:products(id, sku, name, unit)
         )
       `)
-      .eq('id', params.id)
+      .eq('id', id)
       .single();
 
     if (error || !warehouse) {
@@ -51,9 +52,10 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -84,7 +86,7 @@ export async function PATCH(
     const { data: warehouse, error } = await supabase
       .from('warehouses')
       .update(validation.data)
-      .eq('id', params.id)
+      .eq('id', id)
       .select()
       .single();
 
@@ -105,9 +107,10 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
@@ -128,7 +131,7 @@ export async function DELETE(
     const { error } = await supabase
       .from('warehouses')
       .delete()
-      .eq('id', params.id);
+      .eq('id', id);
 
     if (error) {
       console.error('Error deleting warehouse:', error);
