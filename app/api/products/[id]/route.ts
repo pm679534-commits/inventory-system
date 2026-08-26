@@ -56,7 +56,7 @@ export async function GET(
   }
 }
 
-export async function PATCH(
+export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
@@ -106,9 +106,16 @@ export async function PATCH(
 
     return NextResponse.json(product);
   } catch (error) {
-    console.error('Product PATCH error:', error);
+    console.error('Product PUT error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
+}
+
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  return PUT(request, { params });
 }
 
 export async function DELETE(

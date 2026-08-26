@@ -50,7 +50,7 @@ export async function GET(
   }
 }
 
-export async function PATCH(
+export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
@@ -100,9 +100,16 @@ export async function PATCH(
 
     return NextResponse.json(warehouse);
   } catch (error) {
-    console.error('Warehouse PATCH error:', error);
+    console.error('Warehouse PUT error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
+}
+
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  return PUT(request, { params });
 }
 
 export async function DELETE(
