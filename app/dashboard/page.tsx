@@ -13,6 +13,27 @@ export default async function DashboardPage() {
     .eq('id', user!.id)
     .single();
 
+  // Fetch real stats
+  const { count: productsCount } = await supabase
+    .from('products')
+    .select('*', { count: 'exact', head: true });
+
+  const { count: warehousesCount } = await supabase
+    .from('warehouses')
+    .select('*', { count: 'exact', head: true });
+
+  const { count: activeOrdersCount } = await supabase
+    .from('orders')
+    .select('*', { count: 'exact', head: true })
+    .in('status', ['pending', 'processing', 'shipped']);
+
+  const { data: deliveredOrders } = await supabase
+    .from('orders')
+    .select('total_amount')
+    .eq('status', 'delivered');
+
+  const totalRevenue = deliveredOrders?.reduce((sum, order) => sum + (order.total_amount || 0), 0) || 0;
+
   return (
     <div className="max-w-7xl mx-auto">
       {/* Header */}
@@ -27,45 +48,71 @@ export default async function DashboardPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <StatCard
           title="Total Products"
-          value="—"
+          value={productsCount?.toString() || '0'}
           icon={<Package className="w-6 h-6" />}
           color="blue"
         />
         <StatCard
           title="Warehouses"
-          value="—"
+          value={warehousesCount?.toString() || '0'}
           icon={<Warehouse className="w-6 h-6" />}
           color="green"
         />
         <StatCard
           title="Active Orders"
-          value="—"
+          value={activeOrdersCount?.toString() || '0'}
           icon={<ShoppingCart className="w-6 h-6" />}
           color="orange"
         />
         <StatCard
-          title="Revenue"
-          value="—"
+          title="Total Revenue"
+          value={`$${totalRevenue.toFixed(0)}`}
           icon={<TrendingUp className="w-6 h-6" />}
           color="purple"
         />
       </div>
 
-      {/* Empty State */}
-      <div className="bg-white rounded-2xl border border-gray-200 p-12 text-center">
-        <div className="max-w-md mx-auto">
-          <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Package className="w-8 h-8 text-blue-600" />
+      {/* Content Based on Data */}
+      {(productsCount || 0) === 0 && (warehousesCount || 0) === 0 ? (
+        <div className="bg-white rounded-2xl border border-gray-200 p-12 text-center">
+          <div className="max-w-md mx-auto">
+            <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Package className="w-8 h-8 text-blue-600" />
+            </div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              Your dashboard is ready
+            </h3>
+            <p className="text-gray-600 mb-6">
+              Start by adding products and warehouses to manage your inventory.
+            </p>
           </div>
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">
-            Your dashboard is ready
-          </h3>
-          <p className="text-gray-600 mb-6">
-            Start by adding products and warehouses to manage your inventory. Future updates will include real-time analytics and insights.
-          </p>
         </div>
-      </div>
+      ) : (
+        <div className="bg-white rounded-2xl border border-gray-200 p-8">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Links</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <QuickLink href="/admin/products" title="Manage Products" description="View and edit product catalog" />
+            <QuickLink href="/admin/warehouses" title="Manage Warehouses" description="View warehouse stock levels" />
+            <QuickLink href="/admin/orders" title="View Orders" description="Track and manage orders" />
+            <QuickLink href="/admin/reports" title="View Reports" description="Analyze performance metrics" />
+            <QuickLink href="/admin/analytics" title="AI Analytics" description="Get AI-powered insights" />
+            <QuickLink href="/admin/exports" title="Export Data" description="Generate Excel or 1C exports" />
+          </div>
+        </div>
+      )}
     </div>
+  );
+}
+
+function QuickLink({ href, title, description }: { href: string; title: string; description: string }) {
+  return (
+    <a
+      href={href}
+      className="p-4 rounded-lg border border-gray-200 hover:border-blue-200 hover:shadow-md transition-all"
+    >
+      <h3 className="font-semibold text-gray-900 mb-1">{title}</h3>
+      <p className="text-sm text-gray-600">{description}</p>
+    </a>
   );
 }
 

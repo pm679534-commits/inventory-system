@@ -43,16 +43,14 @@ export default async function AdminPage() {
           <ActionCard
             href="/admin/products"
             title="Products"
-            description="Manage product catalog (coming soon)"
+            description="Manage product catalog and inventory"
             icon={<Package className="w-5 h-5" />}
-            disabled
           />
           <ActionCard
             href="/admin/warehouses"
             title="Warehouses"
-            description="Configure warehouse locations (coming soon)"
+            description="Configure warehouse locations and stock"
             icon={<Warehouse className="w-5 h-5" />}
-            disabled
           />
         </div>
       </div>
