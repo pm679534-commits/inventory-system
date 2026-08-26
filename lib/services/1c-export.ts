@@ -1,6 +1,9 @@
-import archiver from 'archiver';
+import * as archiverPkg from 'archiver';
 import type { ExportFilterInput } from '@/lib/validations';
 import type { Product, Warehouse, Category } from '@/lib/types';
+
+// Handle CommonJS default export compatibility
+const archiver = (archiverPkg as any).default ?? archiverPkg;
 
 interface ProductExportData extends Product {
   category_name: string | null;
