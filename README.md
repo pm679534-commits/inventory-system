@@ -2,7 +2,7 @@
 
 A modern, enterprise-grade multi-warehouse inventory management platform built with Next.js 14, TypeScript, Tailwind CSS, and Supabase.
 
-## 🚀 Features (Foundation Phase)
+## 🚀 Features
 
 ### Public Website
 - Premium landing page with Linear/Stripe/Vercel aesthetic
@@ -27,20 +27,39 @@ A modern, enterprise-grade multi-warehouse inventory management platform built w
 ### Admin Panel
 - Separate admin layout with role-based access control
 - User management: view all users and change roles
-- Navigation scaffolded for future sections:
-  - Products
-  - Warehouses
-  - Orders
-  - Exports
-  - Analytics
+- **Data Exports**: Excel and 1C XML with filtering
+- **AI Analytics**: Gemini-powered insights and predictions
+
+### Export System
+- **Excel Export**: Multi-sheet workbooks with formatted data
+  - Summary sheet + warehouse-specific sheets
+  - Styled headers, frozen rows, proper number formatting
+  - Color-coded status and stock levels
+  - Filters: stock status, warehouse, category, product status
+- **1C XML Export**: CommerceML 2.x format for 1C integration
+  - Catalog file (Классификатор/Каталог)
+  - Offers file (ПакетПредложений) with prices and stock
+  - Stable UUIDs for incremental updates
+  - UTF-8 encoding with proper XML escaping
+  - Delivered as ZIP with both files
+
+### AI Services (Gemini)
+- **Sales Trend Analysis**: Top movers, slow movers, period comparison
+- **Reorder Predictions**: Days-to-stockout, suggested quantities
+- **Product Descriptions**: AI-generated descriptions and features
+- Structured JSON output validated with Zod
+- Retry with exponential backoff
+- Safe fallbacks on API errors
 
 ### Security
 - Row Level Security (RLS) enabled on all tables
 - Server-side role enforcement via middleware
-- Separate public and service role Supabase keys
+- Admin/Manager-only access to exports and AI endpoints
+- Rate limiting on all export and AI endpoints
 - Input validation using Zod
+- Export audit logging
 - Secure HTTP headers (CSP, X-Frame-Options, etc.)
-- Rate limiting on authentication endpoints
+- No stack traces or raw errors exposed to clients
 - CSRF-safe form handling
 - No hardcoded secrets
 
@@ -48,6 +67,8 @@ A modern, enterprise-grade multi-warehouse inventory management platform built w
 
 - **Frontend**: Next.js 14+ (App Router), TypeScript, Tailwind CSS
 - **Backend/Database**: Supabase (PostgreSQL, Auth, RLS)
+- **AI**: Google Gemini (Generative AI)
+- **Export**: ExcelJS, Archiver (ZIP)
 - **UI Components**: Lucide React (icons)
 - **Validation**: Zod
 - **Deployment**: Vercel (zero-config)
@@ -243,17 +264,56 @@ warehouse-inventory-system/
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anonymous/public key | Yes |
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (server-only) | Yes |
 | `NEXT_PUBLIC_APP_URL` | Your application URL | Yes |
+| `GEMINI_API_KEY` | Google Gemini API key for AI features | Optional* |
 
 **Important**: Never commit `.env.local` to version control. The service role key must remain secret.
 
-## 🚧 Next Phase Features
+*AI features require a Gemini API key. Get one at [Google AI Studio](https://makersuite.google.com/app/apikey). Without it, AI endpoints will return 503.
 
-The following features are planned for future phases:
+## 🧪 Testing Your Setup
 
-- **Products**: Full product catalog management
-- **Warehouses**: Multi-warehouse location management
-- **Inventory**: Real-time stock tracking across warehouses
-- **Orders**: Order processing and fulfillment
+1. **Register a new account**
+   - Go to `/auth/register`
+   - Create an account
+   - Check your email for verification
+
+2. **Verify default role**
+   - Log in at `/auth/login`
+   - Check that you can access `/dashboard`
+   - Verify you cannot access `/admin` (Staff role by default)
+
+3. **Grant admin access**
+   - Go to your Supabase dashboard
+   - Navigate to Table Editor → `profiles`
+   - Find your user and change `role` to `Admin`
+
+4. **Test admin panel**
+   - Refresh your dashboard
+   - You should now see "Admin Panel" in the sidebar
+   - Click it to access `/admin`
+   - Test changing another user's role
+
+5. **Test exports**
+   - Navigate to `/admin/exports`
+   - Try exporting to Excel with different filters
+   - Try exporting to 1C XML
+   - Check the downloaded files
+
+6. **Test AI features (if configured)**
+   - Navigate to `/admin/analytics`
+   - Click "Analyze Trends"
+   - Review AI-generated insights
+
+## 🚧 Completed Features
+
+The following features have been implemented:
+
+- ✅ **Authentication**: Complete email/password system
+- ✅ **User Management**: Admin panel with role management
+- ✅ **Data Exports**: Excel and 1C XML with filtering
+- ✅ **AI Analytics**: Gemini-powered insights and predictions
+- ✅ **Database Schema**: Products, warehouses, stock, orders
+- ✅ **Export Auditing**: All exports logged for compliance
 - **Exports**: Data export and reporting system
 - **Analytics**: Real-time dashboards and insights
 
