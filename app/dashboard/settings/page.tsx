@@ -170,6 +170,20 @@ export default function SettingsPage() {
         [field]: value,
       },
     });
+
+    // Apply theme immediately when changed
+    if (field === 'theme') {
+      applyTheme(value);
+    }
+  };
+
+  const applyTheme = (theme: 'light' | 'dark' | 'auto') => {
+    if (theme === 'auto') {
+      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.classList.toggle('dark', isDark);
+    } else {
+      document.documentElement.classList.toggle('dark', theme === 'dark');
+    }
   };
 
   if (loading) {
@@ -382,15 +396,8 @@ export default function SettingsPage() {
                 <option value="dark">Dark</option>
                 <option value="auto">Auto (System)</option>
               </select>
-              <p className="text-xs text-gray-500 mt-1">
-                Choose your preferred color theme (requires page reload)
-              </p>
-            </div>
-
-            <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-              <p className="text-sm text-purple-800">
-                <strong>Coming Soon:</strong> Dark theme is currently in development. Theme changes
-                will take effect in a future update.
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                Choose your preferred color theme (applies immediately)
               </p>
             </div>
           </div>
