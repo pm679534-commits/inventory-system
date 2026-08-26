@@ -1,4 +1,4 @@
-import { ZipArchive } from 'archiver';
+import archiver from 'archiver';
 import type { ExportFilterInput } from '@/lib/validations';
 import type { Product, Warehouse, Category } from '@/lib/types';
 
@@ -197,7 +197,7 @@ export async function generate1CExportZip(
   warehouses: Warehouse[]
 ): Promise<Buffer> {
   return new Promise((resolve, reject) => {
-    const archive = new ZipArchive({
+    const archive = archiver('zip', {
       zlib: { level: 9 },
     });
 

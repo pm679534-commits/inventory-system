@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 
 interface Category {
   id: string;
@@ -15,7 +14,7 @@ interface Warehouse {
 
 interface Stock {
   warehouse_id: string;
-  warehouse_name: string;
+  warehouse: { name: string };
   quantity: number;
   reserved_quantity: number;
 }
@@ -25,16 +24,20 @@ interface Product {
   sku: string;
   name: string;
   description: string | null;
-  price: number;
-  category_id: string;
-  category_name: string;
+  short_description: string | null;
+  cost_price: number;
+  sale_price: number;
+  unit: string;
+  variant: string | null;
+  category_id: string | null;
+  category: { name: string } | null;
   barcode: string | null;
+  status: string;
   created_at: string;
   stock: Stock[];
 }
 
 export default function ProductsPage() {
-  const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
@@ -43,12 +46,14 @@ export default function ProductsPage() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [generatingDescription, setGeneratingDescription] = useState(false);
 
   // Filters and pagination
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [warehouseFilter, setWarehouseFilter] = useState('');
   const [stockFilter, setStockFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const pageSize = 20;
@@ -58,9 +63,14 @@ export default function ProductsPage() {
     sku: '',
     name: '',
     description: '',
-    price: '',
+    short_description: '',
+    cost_price: '',
+    sale_price: '',
+    unit: 'pcs',
+    variant: '',
     category_id: '',
     barcode: '',
+    status: 'active',
   });
   const [formError, setFormError] = useState('');
   const [formLoading, setFormLoading] = useState(false);
@@ -72,7 +82,7 @@ export default function ProductsPage() {
 
   useEffect(() => {
     fetchProducts();
-  }, [page, searchTerm, categoryFilter, warehouseFilter, stockFilter]);
+  }, [page, searchTerm, categoryFilter, warehouseFilter, stockFilter, statusFilter]);
 
   const fetchCategories = async () => {
     try {
@@ -103,13 +113,14 @@ export default function ProductsPage() {
 
       const params = new URLSearchParams({
         page: page.toString(),
-        pageSize: pageSize.toString(),
+        limit: pageSize.toString(),
       });
 
       if (searchTerm) params.append('search', searchTerm);
-      if (categoryFilter) params.append('category', categoryFilter);
-      if (warehouseFilter) params.append('warehouse', warehouseFilter);
-      if (stockFilter) params.append('stock', stockFilter);
+      if (categoryFilter) params.append('categoryId', categoryFilter);
+      if (warehouseFilter) params.append('warehouseId', warehouseFilter);
+      if (stockFilter) params.append('stockFilter', stockFilter);
+      if (statusFilter) params.append('status', statusFilter);
 
       const res = await fetch(`/api/products?${params}`);
       if (!res.ok) throw new Error('Failed to fetch products');
@@ -124,6 +135,42 @@ export default function ProductsPage() {
     }
   };
 
+  const handleGenerateDescription = async () => {
+    if (!formData.name) {
+      alert('Please enter a product name first');
+      return;
+    }
+
+    setGeneratingDescription(true);
+    try {
+      const res = await fetch('/api/ai/description', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          productName: formData.name,
+          shortDescription: formData.short_description || undefined,
+          category: categories.find(c => c.id === formData.category_id)?.name,
+        }),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.error || 'Failed to generate description');
+      }
+
+      const data = await res.json();
+      setFormData({
+        ...formData,
+        description: data.description,
+        short_description: data.shortDescription,
+      });
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Failed to generate description');
+    } finally {
+      setGeneratingDescription(false);
+    }
+  };
+
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError('');
@@ -135,7 +182,13 @@ export default function ProductsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
-          price: parseFloat(formData.price),
+          cost_price: parseFloat(formData.cost_price),
+          sale_price: parseFloat(formData.sale_price),
+          category_id: formData.category_id || null,
+          barcode: formData.barcode || null,
+          variant: formData.variant || null,
+          description: formData.description || null,
+          short_description: formData.short_description || null,
         }),
       });
 
@@ -145,14 +198,7 @@ export default function ProductsPage() {
       }
 
       setShowCreateModal(false);
-      setFormData({
-        sku: '',
-        name: '',
-        description: '',
-        price: '',
-        category_id: '',
-        barcode: '',
-      });
+      resetForm();
       fetchProducts();
     } catch (err) {
       setFormError(err instanceof Error ? err.message : 'An error occurred');
@@ -174,7 +220,13 @@ export default function ProductsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
-          price: parseFloat(formData.price),
+          cost_price: parseFloat(formData.cost_price),
+          sale_price: parseFloat(formData.sale_price),
+          category_id: formData.category_id || null,
+          barcode: formData.barcode || null,
+          variant: formData.variant || null,
+          description: formData.description || null,
+          short_description: formData.short_description || null,
         }),
       });
 
@@ -214,15 +266,37 @@ export default function ProductsPage() {
     }
   };
 
+  const resetForm = () => {
+    setFormData({
+      sku: '',
+      name: '',
+      description: '',
+      short_description: '',
+      cost_price: '',
+      sale_price: '',
+      unit: 'pcs',
+      variant: '',
+      category_id: '',
+      barcode: '',
+      status: 'active',
+    });
+    setFormError('');
+  };
+
   const openEditModal = (product: Product) => {
     setSelectedProduct(product);
     setFormData({
       sku: product.sku,
       name: product.name,
       description: product.description || '',
-      price: product.price.toString(),
-      category_id: product.category_id,
+      short_description: product.short_description || '',
+      cost_price: product.cost_price.toString(),
+      sale_price: product.sale_price.toString(),
+      unit: product.unit,
+      variant: product.variant || '',
+      category_id: product.category_id || '',
       barcode: product.barcode || '',
+      status: product.status,
     });
     setFormError('');
     setShowEditModal(true);
@@ -242,15 +316,7 @@ export default function ProductsPage() {
         <h1 className="text-3xl font-bold">Products</h1>
         <button
           onClick={() => {
-            setFormData({
-              sku: '',
-              name: '',
-              description: '',
-              price: '',
-              category_id: '',
-              barcode: '',
-            });
-            setFormError('');
+            resetForm();
             setShowCreateModal(true);
           }}
           className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
@@ -261,7 +327,7 @@ export default function ProductsPage() {
 
       {/* Filters */}
       <div className="bg-white p-4 rounded-lg shadow mb-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Search
@@ -338,6 +404,25 @@ export default function ProductsPage() {
               <option value="out_of_stock">Out of Stock</option>
             </select>
           </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Status
+            </label>
+            <select
+              value={statusFilter}
+              onChange={(e) => {
+                setStatusFilter(e.target.value);
+                setPage(1);
+              }}
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">All Statuses</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+              <option value="discontinued">Discontinued</option>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -366,10 +451,13 @@ export default function ProductsPage() {
                     Category
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Price
+                    Prices
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Stock
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
                   </th>
                   <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
@@ -384,15 +472,23 @@ export default function ProductsPage() {
                     <tr key={product.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4">
                         <div className="font-medium text-gray-900">{product.name}</div>
-                        {product.description && (
+                        {product.variant && (
+                          <div className="text-sm text-gray-500">Variant: {product.variant}</div>
+                        )}
+                        {product.short_description && (
                           <div className="text-sm text-gray-500 truncate max-w-xs">
-                            {product.description}
+                            {product.short_description}
                           </div>
                         )}
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-900">{product.sku}</td>
-                      <td className="px-6 py-4 text-sm text-gray-500">{product.category_name}</td>
-                      <td className="px-6 py-4 text-sm text-gray-900">${product.price.toFixed(2)}</td>
+                      <td className="px-6 py-4 text-sm text-gray-900 font-mono">{product.sku}</td>
+                      <td className="px-6 py-4 text-sm text-gray-500">
+                        {product.category?.name || '-'}
+                      </td>
+                      <td className="px-6 py-4 text-sm">
+                        <div className="text-gray-900">Sale: ${product.sale_price.toFixed(2)}</div>
+                        <div className="text-gray-500">Cost: ${product.cost_price.toFixed(2)}</div>
+                      </td>
                       <td className="px-6 py-4">
                         <div className="text-sm">
                           <div className={`font-medium ${availableStock === 0 ? 'text-red-600' : availableStock < 10 ? 'text-yellow-600' : 'text-green-600'}`}>
@@ -402,6 +498,15 @@ export default function ProductsPage() {
                             {totalStock} total
                           </div>
                         </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className={`px-2 py-1 text-xs font-medium rounded ${
+                          product.status === 'active' ? 'bg-green-100 text-green-800' :
+                          product.status === 'inactive' ? 'bg-gray-100 text-gray-800' :
+                          'bg-red-100 text-red-800'
+                        }`}>
+                          {product.status}
+                        </span>
                       </td>
                       <td className="px-6 py-4 text-right text-sm font-medium space-x-2">
                         <button
@@ -449,29 +554,45 @@ export default function ProductsPage() {
         </>
       )}
 
-      {/* Create Modal */}
-      {showCreateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-            <h2 className="text-2xl font-bold mb-4">Create Product</h2>
-            <form onSubmit={handleCreate} className="space-y-4">
+      {/* Product Form Modal (Create/Edit) */}
+      {(showCreateModal || showEditModal) && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
+          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full p-6 my-8 max-h-[90vh] overflow-y-auto">
+            <h2 className="text-2xl font-bold mb-4">
+              {showCreateModal ? 'Create Product' : 'Edit Product'}
+            </h2>
+            <form onSubmit={showCreateModal ? handleCreate : handleEdit} className="space-y-4">
               {formError && (
                 <div className="bg-red-50 text-red-600 p-3 rounded text-sm">
                   {formError}
                 </div>
               )}
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  SKU *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formData.sku}
-                  onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    SKU *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.sku}
+                    onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Barcode
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.barcode}
+                    onChange={(e) => setFormData({ ...formData, barcode: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
               </div>
 
               <div>
@@ -488,119 +609,24 @@ export default function ProductsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Description
-                </label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Price *
-                </label>
-                <input
-                  type="number"
-                  required
-                  step="0.01"
-                  min="0"
-                  value={formData.price}
-                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Category *
-                </label>
-                <select
-                  required
-                  value={formData.category_id}
-                  onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">Select category</option>
-                  {categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Barcode
-                </label>
-                <input
-                  type="text"
-                  value={formData.barcode}
-                  onChange={(e) => setFormData({ ...formData, barcode: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              <div className="flex justify-end space-x-3 pt-4">
-                <button
-                  type="button"
-                  onClick={() => setShowCreateModal(false)}
-                  className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50"
-                  disabled={formLoading}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={formLoading}
-                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
-                >
-                  {formLoading ? 'Creating...' : 'Create'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Edit Modal */}
-      {showEditModal && selectedProduct && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-            <h2 className="text-2xl font-bold mb-4">Edit Product</h2>
-            <form onSubmit={handleEdit} className="space-y-4">
-              {formError && (
-                <div className="bg-red-50 text-red-600 p-3 rounded text-sm">
-                  {formError}
+                <div className="flex justify-between items-center mb-1">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Short Description
+                  </label>
+                  <button
+                    type="button"
+                    onClick={handleGenerateDescription}
+                    disabled={generatingDescription || !formData.name}
+                    className="text-xs text-purple-600 hover:text-purple-900 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {generatingDescription ? '✨ Generating...' : '✨ Generate with AI'}
+                  </button>
                 </div>
-              )}
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  SKU *
-                </label>
                 <input
                   type="text"
-                  required
-                  value={formData.sku}
-                  onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Name *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  value={formData.short_description}
+                  onChange={(e) => setFormData({ ...formData, short_description: e.target.value })}
+                  maxLength={500}
                   className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -612,61 +638,114 @@ export default function ProductsPage() {
                 <textarea
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  rows={3}
+                  rows={4}
                   className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Price *
-                </label>
-                <input
-                  type="number"
-                  required
-                  step="0.01"
-                  min="0"
-                  value={formData.price}
-                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Category
+                  </label>
+                  <select
+                    value={formData.category_id}
+                    onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select category</option>
+                    {categories.map((cat) => (
+                      <option key={cat.id} value={cat.id}>
+                        {cat.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Variant
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.variant}
+                    onChange={(e) => setFormData({ ...formData, variant: e.target.value })}
+                    placeholder="e.g. Size, Color"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Unit *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.unit}
+                    onChange={(e) => setFormData({ ...formData, unit: e.target.value })}
+                    placeholder="pcs, kg, m"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Cost Price *
+                  </label>
+                  <input
+                    type="number"
+                    required
+                    step="0.01"
+                    min="0"
+                    value={formData.cost_price}
+                    onChange={(e) => setFormData({ ...formData, cost_price: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Sale Price *
+                  </label>
+                  <input
+                    type="number"
+                    required
+                    step="0.01"
+                    min="0"
+                    value={formData.sale_price}
+                    onChange={(e) => setFormData({ ...formData, sale_price: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Category *
+                  Status *
                 </label>
                 <select
                   required
-                  value={formData.category_id}
-                  onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
+                  value={formData.status}
+                  onChange={(e) => setFormData({ ...formData, status: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value="">Select category</option>
-                  {categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </option>
-                  ))}
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                  <option value="discontinued">Discontinued</option>
                 </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Barcode
-                </label>
-                <input
-                  type="text"
-                  value={formData.barcode}
-                  onChange={(e) => setFormData({ ...formData, barcode: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
               </div>
 
               <div className="flex justify-end space-x-3 pt-4">
                 <button
                   type="button"
-                  onClick={() => setShowEditModal(false)}
+                  onClick={() => {
+                    setShowCreateModal(false);
+                    setShowEditModal(false);
+                    setSelectedProduct(null);
+                  }}
                   className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50"
                   disabled={formLoading}
                 >
@@ -677,7 +756,7 @@ export default function ProductsPage() {
                   disabled={formLoading}
                   className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
                 >
-                  {formLoading ? 'Saving...' : 'Save Changes'}
+                  {formLoading ? 'Saving...' : showCreateModal ? 'Create' : 'Save Changes'}
                 </button>
               </div>
             </form>

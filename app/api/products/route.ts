@@ -28,6 +28,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const search = searchParams.get('search');
     const categoryId = searchParams.get('categoryId');
+    const warehouseId = searchParams.get('warehouseId');
     const status = searchParams.get('status');
     const stockFilter = searchParams.get('stockFilter');
     const page = parseInt(searchParams.get('page') || '1');
@@ -69,13 +70,19 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to fetch products' }, { status: 500 });
     }
 
-    // Apply stock filter if needed
+    // Apply stock and warehouse filters if needed
     let filteredProducts = products || [];
-    if (stockFilter) {
+    if (stockFilter || warehouseId) {
       filteredProducts = filteredProducts.filter((product: any) => {
-        const totalStock = product.stock?.reduce((sum: number, s: any) => sum + (s.quantity - s.reserved_quantity), 0) || 0;
+        // Filter by warehouse if specified
+        const relevantStock = warehouseId
+          ? product.stock?.filter((s: any) => s.warehouse_id === warehouseId) || []
+          : product.stock || [];
+
+        const totalStock = relevantStock.reduce((sum: number, s: any) => sum + (s.quantity - s.reserved_quantity), 0);
+
         if (stockFilter === 'in_stock') return totalStock > 0;
-        if (stockFilter === 'low_stock') return totalStock > 0 && totalStock <= 10;
+        if (stockFilter === 'low_stock') return totalStock > 0 && totalStock < 10;
         if (stockFilter === 'out_of_stock') return totalStock <= 0;
         return true;
       });
