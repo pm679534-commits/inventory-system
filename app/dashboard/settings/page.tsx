@@ -49,7 +49,7 @@ export default function SettingsPage() {
 
   useEffect(() => {
     fetchProfile();
-    loadSettings();
+    fetchSettings();
   }, []);
 
   const fetchProfile = async () => {
@@ -74,20 +74,25 @@ export default function SettingsPage() {
     }
   };
 
-  const loadSettings = () => {
-    // Load settings from localStorage
-    const saved = localStorage.getItem('app_settings');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
+  const fetchSettings = async () => {
+    try {
+      const response = await fetch('/api/settings');
+      if (response.ok) {
+        const data = await response.json();
         setSettings((prev) => ({
           ...prev,
-          notifications: parsed.notifications || prev.notifications,
-          display: parsed.display || prev.display,
+          notifications: {
+            low_stock_threshold: data.low_stock_threshold || 10,
+            email_notifications: data.email_notifications ?? true,
+          },
+          display: {
+            items_per_page: data.items_per_page || 20,
+            theme: data.theme || 'light',
+          },
         }));
-      } catch (err) {
-        console.error('Failed to parse saved settings:', err);
       }
+    } catch (err) {
+      console.error('Failed to fetch settings:', err);
     }
   };
 
@@ -111,14 +116,22 @@ export default function SettingsPage() {
         throw new Error(errorData.error || 'Failed to update profile');
       }
 
-      // Save other settings to localStorage
-      localStorage.setItem(
-        'app_settings',
-        JSON.stringify({
-          notifications: settings.notifications,
-          display: settings.display,
-        })
-      );
+      // Save settings to database
+      const settingsResponse = await fetch('/api/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          low_stock_threshold: settings.notifications.low_stock_threshold,
+          email_notifications: settings.notifications.email_notifications,
+          items_per_page: settings.display.items_per_page,
+          theme: settings.display.theme,
+        }),
+      });
+
+      if (!settingsResponse.ok) {
+        const errorData = await settingsResponse.json();
+        throw new Error(errorData.error || 'Failed to save settings');
+      }
 
       setSuccessMessage('Settings saved successfully!');
       setTimeout(() => setSuccessMessage(null), 3000);
@@ -383,44 +396,6 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* System Information */}
-        <div className="bg-white rounded-lg border border-gray-200">
-          <div className="p-6 border-b border-gray-200">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gray-50 rounded-lg flex items-center justify-center">
-                <Settings className="w-5 h-5 text-gray-600" />
-              </div>
-              <div>
-                <h2 className="text-lg font-bold text-gray-900">System Information</h2>
-                <p className="text-sm text-gray-600">Application details</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="p-6">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-gray-600">Application Version</p>
-                <p className="font-medium text-gray-900">1.0.0</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Database</p>
-                <p className="font-medium text-gray-900">PostgreSQL (Supabase)</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">AI Provider</p>
-                <p className="font-medium text-gray-900">Google Gemini</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Last Updated</p>
-                <p className="font-medium text-gray-900">
-                  {new Date().toLocaleDateString()}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* Save Button */}
         <div className="flex gap-3">
           <button
@@ -436,8 +411,9 @@ export default function SettingsPage() {
         {/* Help Text */}
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <p className="text-sm text-blue-800">
-            <strong>Need Help?</strong> Settings are automatically saved to your browser and
-            synchronized with your account. Profile changes are saved to the database immediately.
+            <strong>Note:</strong> Settings are saved to your account and will be available across
+            all your sessions. Changes to display preferences may require a page reload to take
+            full effect.
           </p>
         </div>
       </div>
