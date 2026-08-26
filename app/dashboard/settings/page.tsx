@@ -189,7 +189,7 @@ export default function SettingsPage() {
   if (loading) {
     return (
       <div className="max-w-4xl mx-auto">
-        <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 p-12 text-center">
           <div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
           <p className="mt-4 text-gray-600">Loading settings...</p>
         </div>
@@ -205,13 +205,13 @@ export default function SettingsPage() {
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
           {error}
         </div>
       )}
 
       {successMessage && (
-        <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6 flex items-center gap-2">
+        <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6 flex items-center gap-2">
           <CheckCircle className="w-5 h-5" />
           {successMessage}
         </div>
@@ -219,10 +219,10 @@ export default function SettingsPage() {
 
       <div className="space-y-6">
         {/* Profile Settings */}
-        <div className="bg-white rounded-lg border border-gray-200">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200">
           <div className="p-6 border-b border-gray-200">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex items-center justify-center">
                 <User className="w-5 h-5 text-blue-600" />
               </div>
               <div>
@@ -241,7 +241,7 @@ export default function SettingsPage() {
                 type="text"
                 value={settings.profile.full_name}
                 onChange={(e) => updateProfileSetting('full_name', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
                 placeholder="Enter your full name"
               />
             </div>
@@ -254,9 +254,9 @@ export default function SettingsPage() {
                 type="email"
                 value={settings.profile.email}
                 disabled
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 text-gray-500 dark:text-gray-400 dark:text-gray-500 cursor-not-allowed"
               />
-              <p className="text-xs text-gray-500 mt-1">Email cannot be changed</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">Email cannot be changed</p>
             </div>
 
             {profile && (
@@ -271,7 +271,7 @@ export default function SettingsPage() {
                         ? 'bg-purple-100 text-purple-800'
                         : profile.role === 'Manager'
                         ? 'bg-blue-100 text-blue-800'
-                        : 'bg-gray-100 text-gray-800'
+                        : 'bg-gray-100 dark:bg-gray-800 text-gray-800'
                     }`}
                   >
                     {profile.role}
@@ -284,10 +284,10 @@ export default function SettingsPage() {
         </div>
 
         {/* Notification Settings */}
-        <div className="bg-white rounded-lg border border-gray-200">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200">
           <div className="p-6 border-b border-gray-200">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-yellow-50 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg flex items-center justify-center">
                 <Bell className="w-5 h-5 text-yellow-600" />
               </div>
               <div>
@@ -311,11 +311,11 @@ export default function SettingsPage() {
                   onChange={(e) =>
                     updateNotificationSetting('low_stock_threshold', parseInt(e.target.value))
                   }
-                  className="w-32 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-32 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
                 <span className="text-sm text-gray-600">units</span>
               </div>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">
                 Get notified when product stock falls below this threshold
               </p>
             </div>
@@ -336,11 +336,11 @@ export default function SettingsPage() {
                   }
                   className="sr-only peer"
                 />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 dark:border-gray-600 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
               </label>
             </div>
 
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 rounded-lg p-4">
               <p className="text-sm text-yellow-800">
                 <strong>Note:</strong> Low stock notifications will appear in the dashboard when
                 products fall below the threshold. Email notifications require SMTP configuration.
@@ -350,10 +350,10 @@ export default function SettingsPage() {
         </div>
 
         {/* Display Settings */}
-        <div className="bg-white rounded-lg border border-gray-200">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200">
           <div className="p-6 border-b border-gray-200">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-purple-50 dark:bg-purple-900/20 rounded-lg flex items-center justify-center">
                 <Palette className="w-5 h-5 text-purple-600" />
               </div>
               <div>
@@ -371,14 +371,14 @@ export default function SettingsPage() {
               <select
                 value={settings.display.items_per_page}
                 onChange={(e) => updateDisplaySetting('items_per_page', parseInt(e.target.value))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
               >
                 <option value={10}>10 items</option>
                 <option value={20}>20 items</option>
                 <option value={50}>50 items</option>
                 <option value={100}>100 items</option>
               </select>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">
                 Number of items to display in tables and lists
               </p>
             </div>
@@ -390,13 +390,13 @@ export default function SettingsPage() {
               <select
                 value={settings.display.theme}
                 onChange={(e) => updateDisplaySetting('theme', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
               >
                 <option value="light">Light</option>
                 <option value="dark">Dark</option>
                 <option value="auto">Auto (System)</option>
               </select>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">
                 Choose your preferred color theme (applies immediately)
               </p>
             </div>
@@ -416,7 +416,7 @@ export default function SettingsPage() {
         </div>
 
         {/* Help Text */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 rounded-lg p-4">
           <p className="text-sm text-blue-800">
             <strong>Note:</strong> Settings are saved to your account and will be available across
             all your sessions. Changes to display preferences may require a page reload to take

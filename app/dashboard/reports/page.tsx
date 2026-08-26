@@ -114,7 +114,7 @@ export default function ReportsPage() {
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
+      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 p-6 mb-6">
         <div className="flex flex-wrap items-end gap-4">
           <div className="flex-1 min-w-[200px]">
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -124,7 +124,7 @@ export default function ReportsPage() {
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
@@ -136,7 +136,7 @@ export default function ReportsPage() {
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
@@ -147,7 +147,7 @@ export default function ReportsPage() {
             <select
               value={warehouseId}
               onChange={(e) => setWarehouseId(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
             >
               <option value="">All Warehouses</option>
               {warehouses.map((wh) => (
@@ -161,19 +161,19 @@ export default function ReportsPage() {
           <div className="flex gap-2">
             <button
               onClick={() => setQuickRange(7)}
-              className="px-3 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50"
+              className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50"
             >
               7 Days
             </button>
             <button
               onClick={() => setQuickRange(30)}
-              className="px-3 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50"
+              className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50"
             >
               30 Days
             </button>
             <button
               onClick={() => setQuickRange(90)}
-              className="px-3 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50"
+              className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50"
             >
               90 Days
             </button>
@@ -182,13 +182,13 @@ export default function ReportsPage() {
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
           {error}
         </div>
       )}
 
       {loading ? (
-        <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 p-12 text-center">
           <div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
           <p className="mt-4 text-gray-600">Generating report...</p>
         </div>
@@ -227,12 +227,12 @@ export default function ReportsPage() {
           </div>
 
           {/* Stock Summary */}
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 p-6">
             <h2 className="text-xl font-bold text-gray-900 mb-4">Stock Summary</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
                 <div className="flex items-center gap-3 mb-2">
-                  <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center">
+                  <div className="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex items-center justify-center">
                     <Package className="w-6 h-6 text-blue-600" />
                   </div>
                   <div>
@@ -250,7 +250,7 @@ export default function ReportsPage() {
 
               <div>
                 <div className="flex items-center gap-3 mb-2">
-                  <div className="w-12 h-12 bg-yellow-50 rounded-lg flex items-center justify-center">
+                  <div className="w-12 h-12 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg flex items-center justify-center">
                     <AlertTriangle className="w-6 h-6 text-yellow-600" />
                   </div>
                   <div>
@@ -267,7 +267,7 @@ export default function ReportsPage() {
 
               <div>
                 <div className="flex items-center gap-3 mb-2">
-                  <div className="w-12 h-12 bg-red-50 rounded-lg flex items-center justify-center">
+                  <div className="w-12 h-12 bg-red-50 dark:bg-red-900/20 rounded-lg flex items-center justify-center">
                     <AlertTriangle className="w-6 h-6 text-red-600" />
                   </div>
                   <div>
@@ -285,28 +285,28 @@ export default function ReportsPage() {
           </div>
 
           {/* Orders Breakdown */}
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 p-6">
             <h2 className="text-xl font-bold text-gray-900 mb-4">Orders Breakdown</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="text-center p-4 bg-yellow-50 rounded-lg">
+              <div className="text-center p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
                 <p className="text-3xl font-bold text-yellow-600">
                   {reportData.orders.pendingOrders}
                 </p>
                 <p className="text-sm text-gray-600 mt-1">Pending</p>
               </div>
-              <div className="text-center p-4 bg-green-50 rounded-lg">
+              <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
                 <p className="text-3xl font-bold text-green-600">
                   {reportData.orders.fulfilledOrders}
                 </p>
                 <p className="text-sm text-gray-600 mt-1">Delivered</p>
               </div>
-              <div className="text-center p-4 bg-red-50 rounded-lg">
+              <div className="text-center p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
                 <p className="text-3xl font-bold text-red-600">
                   {reportData.orders.cancelledOrders}
                 </p>
                 <p className="text-sm text-gray-600 mt-1">Cancelled</p>
               </div>
-              <div className="text-center p-4 bg-blue-50 rounded-lg">
+              <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                 <p className="text-3xl font-bold text-blue-600">
                   {reportData.orders.totalOrders}
                 </p>
@@ -316,7 +316,7 @@ export default function ReportsPage() {
           </div>
 
           {/* Sales Metrics */}
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 p-6">
             <h2 className="text-xl font-bold text-gray-900 mb-4">Sales Metrics</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="border-l-4 border-green-500 pl-4">
@@ -324,7 +324,7 @@ export default function ReportsPage() {
                 <p className="text-3xl font-bold text-gray-900">
                   ${reportData.sales.totalRevenue.toLocaleString()}
                 </p>
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">
                   From delivered orders only
                 </p>
               </div>
@@ -333,7 +333,7 @@ export default function ReportsPage() {
                 <p className="text-3xl font-bold text-gray-900">
                   ${reportData.sales.averageOrderValue.toLocaleString()}
                 </p>
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">
                   Per order average
                 </p>
               </div>
@@ -342,7 +342,7 @@ export default function ReportsPage() {
                 <p className="text-3xl font-bold text-gray-900">
                   {reportData.sales.totalSold.toLocaleString()}
                 </p>
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">
                   Total products delivered
                 </p>
               </div>
@@ -350,7 +350,7 @@ export default function ReportsPage() {
           </div>
 
           {/* Stock vs Sales */}
-          <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 p-6">
             <h2 className="text-xl font-bold text-gray-900 mb-4">Inventory Health</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
@@ -410,7 +410,7 @@ export default function ReportsPage() {
           </div>
 
           {/* Period Info */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 rounded-lg p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-blue-800 font-medium">Report Period</p>
@@ -453,14 +453,14 @@ function StatCard({
   subtitle?: string;
 }) {
   const colorClasses = {
-    blue: 'bg-blue-50 text-blue-600',
-    green: 'bg-green-50 text-green-600',
-    orange: 'bg-orange-50 text-orange-600',
-    purple: 'bg-purple-50 text-purple-600',
+    blue: 'bg-blue-50 dark:bg-blue-900/20 text-blue-600',
+    green: 'bg-green-50 dark:bg-green-900/20 text-green-600',
+    orange: 'bg-orange-50 dark:bg-orange-900/20 text-orange-600',
+    purple: 'bg-purple-50 dark:bg-purple-900/20 text-purple-600',
   };
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6">
+    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 p-6">
       <div className="flex items-center justify-between mb-4">
         <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${colorClasses[color]}`}>
           {icon}

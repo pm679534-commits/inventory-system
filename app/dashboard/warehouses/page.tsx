@@ -324,21 +324,21 @@ export default function WarehousesPage() {
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
           {error}
         </div>
       )}
 
       {loading ? (
-        <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 p-12 text-center">
           <div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
           <p className="mt-4 text-gray-600">Loading warehouses...</p>
         </div>
       ) : warehouses.length === 0 ? (
-        <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
-          <Warehouse className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 p-12 text-center">
+          <Warehouse className="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-gray-900 mb-2">No warehouses found</h3>
-          <p className="text-gray-600 mb-4">Create your first warehouse to start managing stock</p>
+          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-4">Create your first warehouse to start managing stock</p>
           <button
             onClick={openCreateModal}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
@@ -349,7 +349,7 @@ export default function WarehousesPage() {
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Warehouses List */}
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 overflow-hidden">
             <div className="p-4 border-b border-gray-200">
               <h2 className="text-lg font-semibold text-gray-900">Warehouse Locations</h2>
             </div>
@@ -367,7 +367,7 @@ export default function WarehousesPage() {
                       <div className="flex items-center gap-2">
                         <h3 className="font-semibold text-gray-900">{warehouse.name}</h3>
                         {!warehouse.is_active && (
-                          <span className="text-xs px-2 py-0.5 bg-gray-100 text-gray-600 rounded">
+                          <span className="text-xs px-2 py-0.5 bg-gray-100 dark:bg-gray-800 text-gray-600 rounded">
                             Inactive
                           </span>
                         )}
@@ -383,7 +383,7 @@ export default function WarehousesPage() {
                           e.stopPropagation();
                           handleEdit(warehouse);
                         }}
-                        className="p-1 text-blue-600 hover:bg-blue-50 rounded"
+                        className="p-1 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:bg-blue-900/20 rounded"
                       >
                         <Edit className="w-4 h-4" />
                       </button>
@@ -392,7 +392,7 @@ export default function WarehousesPage() {
                           e.stopPropagation();
                           handleDelete(warehouse.id);
                         }}
-                        className="p-1 text-red-600 hover:bg-red-50 rounded"
+                        className="p-1 text-red-600 dark:text-red-400 hover:bg-red-50 dark:bg-red-900/20 rounded"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -416,7 +416,7 @@ export default function WarehousesPage() {
                     <div className="flex gap-2">
                       <button
                         onClick={openMovementsModal}
-                        className="flex items-center gap-2 px-3 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                        className="flex items-center gap-2 px-3 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 rounded-lg hover:bg-gray-50"
                       >
                         <History className="w-4 h-4" />
                         History
@@ -439,33 +439,33 @@ export default function WarehousesPage() {
                   </div>
                 ) : stock.length === 0 ? (
                   <div className="p-12 text-center">
-                    <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                    <Package className="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
                     <h3 className="text-lg font-semibold text-gray-900 mb-2">No stock items</h3>
                     <p className="text-gray-600">This warehouse has no products in stock</p>
                   </div>
                 ) : (
                   <div className="overflow-x-auto">
                     <table className="w-full">
-                      <thead className="bg-gray-50 border-b border-gray-200">
+                      <thead className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200">
                         <tr>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                             Product
                           </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                             SKU
                           </th>
-                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                             Total
                           </th>
-                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                             Reserved
                           </th>
-                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                             Available
                           </th>
                         </tr>
                       </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
+                      <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200">
                         {stock.map((item) => {
                           const available = getAvailableStock(item);
                           return (
@@ -511,7 +511,7 @@ export default function WarehousesPage() {
               </>
             ) : (
               <div className="p-12 text-center">
-                <Warehouse className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                <Warehouse className="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Select a warehouse</h3>
                 <p className="text-gray-600">Choose a warehouse to view its stock inventory</p>
               </div>
@@ -523,7 +523,7 @@ export default function WarehousesPage() {
       {/* Warehouse Form Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg max-w-lg w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white dark:bg-gray-800 rounded-lg max-w-lg w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6 border-b border-gray-200">
               <h2 className="text-2xl font-bold text-gray-900">
                 {editingWarehouse ? 'Edit Warehouse' : 'Add Warehouse'}
@@ -540,7 +540,7 @@ export default function WarehousesPage() {
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
@@ -553,7 +553,7 @@ export default function WarehousesPage() {
                   required
                   value={formData.code}
                   onChange={(e) => setFormData({ ...formData, code: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
                   placeholder="e.g., WH001"
                 />
               </div>
@@ -566,7 +566,7 @@ export default function WarehousesPage() {
                   type="text"
                   value={formData.address}
                   onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
@@ -579,7 +579,7 @@ export default function WarehousesPage() {
                     type="text"
                     value={formData.city}
                     onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
@@ -591,7 +591,7 @@ export default function WarehousesPage() {
                     type="text"
                     value={formData.country}
                     onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
               </div>
@@ -602,7 +602,7 @@ export default function WarehousesPage() {
                   id="is_active"
                   checked={formData.is_active}
                   onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
-                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  className="w-4 h-4 text-blue-600 dark:text-blue-400 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500"
                 />
                 <label htmlFor="is_active" className="ml-2 text-sm text-gray-700">
                   Active warehouse
@@ -610,7 +610,7 @@ export default function WarehousesPage() {
               </div>
 
               {error && (
-                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
                   {error}
                 </div>
               )}
@@ -623,7 +623,7 @@ export default function WarehousesPage() {
                     setEditingWarehouse(null);
                     setError(null);
                   }}
-                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 rounded-lg hover:bg-gray-50"
                 >
                   Cancel
                 </button>
@@ -643,7 +643,7 @@ export default function WarehousesPage() {
       {/* Transfer Modal */}
       {showTransferModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg max-w-lg w-full">
+          <div className="bg-white dark:bg-gray-800 rounded-lg max-w-lg w-full">
             <div className="p-6 border-b border-gray-200">
               <h2 className="text-2xl font-bold text-gray-900">Transfer Stock</h2>
             </div>
@@ -657,7 +657,7 @@ export default function WarehousesPage() {
                   required
                   value={transferData.product_id}
                   onChange={(e) => setTransferData({ ...transferData, product_id: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Select product</option>
                   {products.map((product) => (
@@ -676,7 +676,7 @@ export default function WarehousesPage() {
                   required
                   value={transferData.from_warehouse_id}
                   onChange={(e) => setTransferData({ ...transferData, from_warehouse_id: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Select source warehouse</option>
                   {warehouses.map((wh) => (
@@ -695,7 +695,7 @@ export default function WarehousesPage() {
                   required
                   value={transferData.to_warehouse_id}
                   onChange={(e) => setTransferData({ ...transferData, to_warehouse_id: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Select destination warehouse</option>
                   {warehouses
@@ -718,7 +718,7 @@ export default function WarehousesPage() {
                   min="1"
                   value={transferData.quantity}
                   onChange={(e) => setTransferData({ ...transferData, quantity: parseInt(e.target.value) })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
@@ -730,13 +730,13 @@ export default function WarehousesPage() {
                   value={transferData.notes}
                   onChange={(e) => setTransferData({ ...transferData, notes: e.target.value })}
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
                   placeholder="Optional transfer notes"
                 />
               </div>
 
               {error && (
-                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
                   {error}
                 </div>
               )}
@@ -748,7 +748,7 @@ export default function WarehousesPage() {
                     setShowTransferModal(false);
                     setError(null);
                   }}
-                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 rounded-lg hover:bg-gray-50"
                 >
                   Cancel
                 </button>
@@ -768,7 +768,7 @@ export default function WarehousesPage() {
       {/* Movements History Modal */}
       {showMovementsModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white dark:bg-gray-800 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6 border-b border-gray-200">
               <h2 className="text-2xl font-bold text-gray-900">Stock Movement History</h2>
               <p className="text-gray-600">{selectedWarehouse?.name}</p>
@@ -777,7 +777,7 @@ export default function WarehousesPage() {
             <div className="p-6">
               {movements.length === 0 ? (
                 <div className="text-center py-12">
-                  <History className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <History className="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
                   <p className="text-gray-600">No stock movements recorded</p>
                 </div>
               ) : (
@@ -803,7 +803,7 @@ export default function WarehousesPage() {
                             </p>
                           )}
                           {movement.notes && (
-                            <p className="text-sm text-gray-500 mt-1">{movement.notes}</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">{movement.notes}</p>
                           )}
                         </div>
                       </div>
@@ -816,7 +816,7 @@ export default function WarehousesPage() {
             <div className="p-6 border-t border-gray-200">
               <button
                 onClick={() => setShowMovementsModal(false)}
-                className="w-full px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 rounded-lg hover:bg-gray-50"
               >
                 Close
               </button>

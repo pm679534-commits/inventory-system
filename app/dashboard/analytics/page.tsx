@@ -159,7 +159,7 @@ export default function AnalyticsPage() {
       case 'low':
         return 'bg-red-100 text-red-800';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 dark:bg-gray-800 text-gray-800';
     }
   };
 
@@ -184,7 +184,7 @@ export default function AnalyticsPage() {
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-start gap-2">
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-start gap-2">
           <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
           <div>
             <p className="font-medium">Error</p>
@@ -195,9 +195,9 @@ export default function AnalyticsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Sales Trends Analysis */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 p-6">
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex items-center justify-center">
               <TrendingUp className="w-5 h-5 text-blue-600" />
             </div>
             <div>
@@ -214,7 +214,7 @@ export default function AnalyticsPage() {
               <select
                 value={trendsPeriod}
                 onChange={(e) => setTrendsPeriod(e.target.value as any)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
               >
                 <option value="7d">Last 7 Days</option>
                 <option value="30d">Last 30 Days</option>
@@ -229,7 +229,7 @@ export default function AnalyticsPage() {
               <select
                 value={trendsLimit}
                 onChange={(e) => setTrendsLimit(parseInt(e.target.value))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
               >
                 <option value={5}>Top 5</option>
                 <option value={10}>Top 10</option>
@@ -289,7 +289,7 @@ export default function AnalyticsPage() {
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
                             <span className="font-medium text-gray-900">{product.productName}</span>
-                            <p className="text-xs text-gray-500 mt-1">
+                            <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">
                               {product.daysInStock} days in stock
                             </p>
                           </div>
@@ -310,7 +310,7 @@ export default function AnalyticsPage() {
                   <Sparkles className="w-4 h-4 text-purple-600" />
                   AI Insights
                 </h3>
-                <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                <div className="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 rounded-lg p-4">
                   <ul className="space-y-2">
                     {trendsAnalysis.insights.map((insight, idx) => (
                       <li key={idx} className="text-sm text-purple-900 flex items-start gap-2">
@@ -322,7 +322,7 @@ export default function AnalyticsPage() {
                 </div>
               </div>
 
-              <div className="text-xs text-gray-500 text-center pt-2 border-t border-gray-200">
+              <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 text-center pt-2 border-t border-gray-200">
                 Analysis for {getPeriodLabel(trendsPeriod)}
               </div>
             </div>
@@ -330,9 +330,9 @@ export default function AnalyticsPage() {
         </div>
 
         {/* Reorder Prediction */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 p-6">
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-10 h-10 bg-orange-50 rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-orange-50 dark:bg-orange-900/20 rounded-lg flex items-center justify-center">
               <Package className="w-5 h-5 text-orange-600" />
             </div>
             <div>
@@ -349,7 +349,7 @@ export default function AnalyticsPage() {
               <select
                 value={selectedProductId}
                 onChange={(e) => setSelectedProductId(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">Choose a product...</option>
                 {products.map((product) => (
@@ -367,7 +367,7 @@ export default function AnalyticsPage() {
               <select
                 value={selectedWarehouseId}
                 onChange={(e) => setSelectedWarehouseId(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">All Warehouses</option>
                 {warehouses.map((warehouse) => (
@@ -391,7 +391,7 @@ export default function AnalyticsPage() {
           {reorderPrediction && (
             <div className="mt-6 space-y-4">
               {/* Current Status */}
-              <div className="bg-gray-50 rounded-lg p-4">
+              <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
                 <h3 className="text-sm font-semibold text-gray-900 mb-3">Current Status</h3>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
@@ -413,10 +413,10 @@ export default function AnalyticsPage() {
               <div
                 className={`rounded-lg p-4 ${
                   reorderPrediction.daysToStockout <= 7
-                    ? 'bg-red-50 border border-red-200'
+                    ? 'bg-red-50 dark:bg-red-900/20 border border-red-200'
                     : reorderPrediction.daysToStockout <= 14
-                    ? 'bg-yellow-50 border border-yellow-200'
-                    : 'bg-green-50 border border-green-200'
+                    ? 'bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200'
+                    : 'bg-green-50 dark:bg-green-900/20 border border-green-200'
                 }`}
               >
                 <h3 className="text-sm font-semibold text-gray-900 mb-3">Prediction</h3>
@@ -459,7 +459,7 @@ export default function AnalyticsPage() {
               </div>
 
               {/* AI Reasoning */}
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 rounded-lg p-4">
                 <h3 className="text-sm font-semibold text-gray-900 mb-2 flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-blue-600" />
                   AI Reasoning
@@ -469,7 +469,7 @@ export default function AnalyticsPage() {
 
               {/* Recommendation */}
               {reorderPrediction.daysToStockout <= 14 && (
-                <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 rounded-lg p-4">
                   <div className="flex items-start gap-2">
                     <AlertCircle className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
                     <div>
@@ -486,7 +486,7 @@ export default function AnalyticsPage() {
                 </div>
               )}
 
-              <div className="text-xs text-gray-500 text-center pt-2 border-t border-gray-200">
+              <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 text-center pt-2 border-t border-gray-200">
                 Prediction based on last 30 days of sales data
               </div>
             </div>
@@ -495,7 +495,7 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Info Banner */}
-      <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+      <div className="mt-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 rounded-lg p-4">
         <div className="flex items-start gap-3">
           <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
             <BarChart3 className="w-5 h-5 text-blue-600" />

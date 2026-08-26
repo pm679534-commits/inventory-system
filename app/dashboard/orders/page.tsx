@@ -273,7 +273,7 @@ export default function OrdersPage() {
       case 'cancelled':
         return 'bg-red-100 text-red-800';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 dark:bg-gray-800 text-gray-800';
     }
   };
 
@@ -300,7 +300,7 @@ export default function OrdersPage() {
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
+      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 p-4 mb-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <select
             value={statusFilter}
@@ -308,7 +308,7 @@ export default function OrdersPage() {
               setStatusFilter(e.target.value);
               setPage(1);
             }}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
           >
             <option value="">All Statuses</option>
             <option value="pending">Pending</option>
@@ -324,7 +324,7 @@ export default function OrdersPage() {
               setWarehouseFilter(e.target.value);
               setPage(1);
             }}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
           >
             <option value="">All Warehouses</option>
             {warehouses.map((wh) => (
@@ -337,13 +337,13 @@ export default function OrdersPage() {
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
           {error}
         </div>
       )}
 
       {/* Orders Table */}
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 overflow-hidden">
         {loading ? (
           <div className="p-12 text-center">
             <div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
@@ -351,9 +351,9 @@ export default function OrdersPage() {
           </div>
         ) : orders.length === 0 ? (
           <div className="p-12 text-center">
-            <ShoppingCart className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+            <ShoppingCart className="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-gray-900 mb-2">No orders found</h3>
-            <p className="text-gray-600 mb-4">Create your first order to get started</p>
+            <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-4">Create your first order to get started</p>
             <button
               onClick={openCreateModal}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
@@ -365,32 +365,32 @@ export default function OrdersPage() {
           <>
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gray-50 border-b border-gray-200">
+                <thead className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                       Order Number
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                       Customer
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                       Warehouse
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                       Amount
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                       Status
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                       Date
                     </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200">
                   {orders.map((order) => (
                     <tr key={order.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -429,7 +429,7 @@ export default function OrdersPage() {
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
                         <button
                           onClick={() => viewOrderDetails(order)}
-                          className="text-blue-600 hover:text-blue-900 mr-3"
+                          className="text-blue-600 dark:text-blue-400 hover:text-blue-900 mr-3"
                         >
                           View
                         </button>
@@ -437,7 +437,7 @@ export default function OrdersPage() {
                           <select
                             value={order.status}
                             onChange={(e) => handleStatusChange(order.id, e.target.value)}
-                            className="text-sm border border-gray-300 rounded px-2 py-1"
+                            className="text-sm border border-gray-300 dark:border-gray-600 rounded px-2 py-1"
                             onClick={(e) => e.stopPropagation()}
                           >
                             <option value="pending">Pending</option>
@@ -465,7 +465,7 @@ export default function OrdersPage() {
                   <button
                     onClick={() => setPage((p) => Math.max(1, p - 1))}
                     disabled={page === 1}
-                    className="px-3 py-1 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                    className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
                   >
                     Previous
                   </button>
@@ -475,7 +475,7 @@ export default function OrdersPage() {
                   <button
                     onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                     disabled={page === totalPages}
-                    className="px-3 py-1 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                    className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
                   >
                     Next
                   </button>
@@ -489,7 +489,7 @@ export default function OrdersPage() {
       {/* Create Order Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white dark:bg-gray-800 rounded-lg max-w-3xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6 border-b border-gray-200">
               <h2 className="text-2xl font-bold text-gray-900">Create Order</h2>
             </div>
@@ -505,7 +505,7 @@ export default function OrdersPage() {
                     required
                     value={formData.customer_name}
                     onChange={(e) => setFormData({ ...formData, customer_name: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
@@ -518,7 +518,7 @@ export default function OrdersPage() {
                     required
                     value={formData.customer_email}
                     onChange={(e) => setFormData({ ...formData, customer_email: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
               </div>
@@ -531,7 +531,7 @@ export default function OrdersPage() {
                   required
                   value={formData.warehouse_id}
                   onChange={(e) => setFormData({ ...formData, warehouse_id: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Select warehouse</option>
                   {warehouses.map((wh) => (
@@ -548,7 +548,7 @@ export default function OrdersPage() {
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                   rows={2}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
                   placeholder="Order notes"
                 />
               </div>
@@ -563,15 +563,15 @@ export default function OrdersPage() {
                     type="button"
                     onClick={addItem}
                     disabled={!formData.warehouse_id}
-                    className="text-sm text-blue-600 hover:text-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     + Add Item
                   </button>
                 </div>
 
                 {formData.items.length === 0 ? (
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                    <Package className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                  <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center">
+                    <Package className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-2" />
                     <p className="text-gray-600">No items added yet</p>
                     <p className="text-sm text-gray-500">Select a warehouse first, then add items</p>
                   </div>
@@ -589,7 +589,7 @@ export default function OrdersPage() {
                                 required
                                 value={item.product_id}
                                 onChange={(e) => updateItem(index, 'product_id', e.target.value)}
-                                className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-blue-500"
                               >
                                 <option value="">Select product</option>
                                 {products.map((product) => (
@@ -599,7 +599,7 @@ export default function OrdersPage() {
                                 ))}
                               </select>
                               {item.product_id && (
-                                <p className="text-xs text-gray-500 mt-1">
+                                <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">
                                   Available: {availableStock} units
                                 </p>
                               )}
@@ -614,7 +614,7 @@ export default function OrdersPage() {
                                 onChange={(e) =>
                                   updateItem(index, 'quantity', parseInt(e.target.value))
                                 }
-                                className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-blue-500"
                                 placeholder="Qty"
                               />
                             </div>
@@ -628,7 +628,7 @@ export default function OrdersPage() {
                                 onChange={(e) =>
                                   updateItem(index, 'unit_price', parseFloat(e.target.value))
                                 }
-                                className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-blue-500"
                                 placeholder="Price"
                               />
                             </div>
@@ -641,7 +641,7 @@ export default function OrdersPage() {
                               <button
                                 type="button"
                                 onClick={() => removeItem(index)}
-                                className="text-red-600 hover:text-red-700"
+                                className="text-red-600 dark:text-red-400 hover:text-red-700"
                               >
                                 ×
                               </button>
@@ -655,7 +655,7 @@ export default function OrdersPage() {
               </div>
 
               {formData.items.length > 0 && (
-                <div className="bg-gray-50 rounded-lg p-4">
+                <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
                   <div className="flex items-center justify-between text-lg font-bold">
                     <span>Total:</span>
                     <span>${calculateTotal().toFixed(2)}</span>
@@ -664,7 +664,7 @@ export default function OrdersPage() {
               )}
 
               {error && (
-                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
                   {error}
                 </div>
               )}
@@ -676,7 +676,7 @@ export default function OrdersPage() {
                     setShowModal(false);
                     setError(null);
                   }}
-                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 rounded-lg hover:bg-gray-50"
                 >
                   Cancel
                 </button>
@@ -696,7 +696,7 @@ export default function OrdersPage() {
       {/* Order Details Modal */}
       {showDetailsModal && selectedOrder && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white dark:bg-gray-800 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6 border-b border-gray-200">
               <h2 className="text-2xl font-bold text-gray-900">Order Details</h2>
               <p className="text-gray-600">{selectedOrder.order_number}</p>
@@ -785,7 +785,7 @@ export default function OrdersPage() {
             <div className="p-6 border-t border-gray-200">
               <button
                 onClick={() => setShowDetailsModal(false)}
-                className="w-full px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 rounded-lg hover:bg-gray-50"
               >
                 Close
               </button>

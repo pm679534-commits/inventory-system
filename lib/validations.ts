@@ -53,7 +53,7 @@ export const aiAnalyzeTrendsSchema = z.object({
 
 export const aiPredictReorderSchema = z.object({
   productId: z.string().uuid(),
-  warehouseId: z.string().uuid().optional(),
+  warehouseId: z.string().uuid().optional().or(z.literal('')).transform(val => val === '' ? undefined : val),
 });
 
 export const aiGenerateDescriptionSchema = z.object({
