@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Package, Plus, Search, Filter, Edit, Trash2, Sparkles } from 'lucide-react';
+import { t } from '@/lib/i18n';
 
 interface Category {
   id: string;
