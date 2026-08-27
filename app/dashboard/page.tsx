@@ -97,7 +97,8 @@ export default async function DashboardPage() {
             <QuickLink href="/dashboard/orders" title="Sifarişlərə Baxın" description="Sifarişləri izləyin və idarə edin" />
             <QuickLink href="/dashboard/reports" title="Hesabatlara Baxın" description="Performans göstəricilərini təhlil edin" />
             <QuickLink href="/dashboard/analytics" title="AI Analitika" description="AI gücündə təhlillər əldə edin" />
-            <QuickLink href="/admin/exports" title="Məlumatları İxrac Et" description="Excel və ya 1C ixracları yaradın" />
+            <QuickLink href="/dashboard/export" title="Məlumatları İxrac Et" description="Excel və CSV ixracları yaradın" />
+            <QuickLink href="/dashboard/pricing" title="Planlar və Qiymətlər" description="Abunə planlarına baxın" />
           </div>
         </div>
       )}
