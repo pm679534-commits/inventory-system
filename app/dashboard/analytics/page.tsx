@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { BarChart3, TrendingUp, TrendingDown, Package, Sparkles, AlertCircle } from 'lucide-react';
+import { t } from '@/lib/i18n';
 
 interface TopMover {
   productId: string;
@@ -179,15 +180,15 @@ export default function AnalyticsPage() {
   return (
     <div className="max-w-7xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">AI Analytics</h1>
-        <p className="text-gray-600">View AI-powered insights and predictions</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">{t.analytics.title}</h1>
+        <p className="text-gray-600 dark:text-gray-400">{t.analytics.subtitle}</p>
       </div>
 
       {error && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-start gap-2">
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 text-red-700 dark:text-red-400 px-4 py-3 rounded-lg mb-6 flex items-start gap-2">
           <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
           <div>
-            <p className="font-medium">Error</p>
+            <p className="font-medium">{t.analytics.error}</p>
             <p className="text-sm">{error}</p>
           </div>
         </div>
@@ -195,45 +196,45 @@ export default function AnalyticsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Sales Trends Analysis */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
           <div className="flex items-center gap-2 mb-4">
             <div className="w-10 h-10 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex items-center justify-center">
-              <TrendingUp className="w-5 h-5 text-blue-600" />
+              <TrendingUp className="w-5 h-5 text-blue-600 dark:text-blue-400" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-gray-900">Sales Trends</h2>
-              <p className="text-sm text-gray-600">AI-powered trend analysis</p>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">{t.analytics.salesTrends}</h2>
+              <p className="text-sm text-gray-600 dark:text-gray-400">{t.analytics.aiPoweredAnalysis}</p>
             </div>
           </div>
 
           <div className="space-y-4 mb-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Analysis Period
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                {t.analytics.analysisPeriod}
               </label>
               <select
                 value={trendsPeriod}
                 onChange={(e) => setTrendsPeriod(e.target.value as any)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
               >
-                <option value="7d">Last 7 Days</option>
-                <option value="30d">Last 30 Days</option>
-                <option value="90d">Last 90 Days</option>
+                <option value="7d">{t.reports.last7Days}</option>
+                <option value="30d">{t.reports.last30Days}</option>
+                <option value="90d">{t.reports.last90Days}</option>
               </select>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Number of Products
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                {t.analytics.numberOfProducts}
               </label>
               <select
                 value={trendsLimit}
                 onChange={(e) => setTrendsLimit(parseInt(e.target.value))}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
               >
-                <option value={5}>Top 5</option>
-                <option value={10}>Top 10</option>
-                <option value={20}>Top 20</option>
+                <option value={5}>{t.analytics.top5}</option>
+                <option value={10}>{t.analytics.top10}</option>
+                <option value={20}>{t.analytics.top20}</option>
               </select>
             </div>
           </div>
@@ -244,31 +245,31 @@ export default function AnalyticsPage() {
             className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Sparkles className="w-4 h-4" />
-            {loading ? 'Analyzing...' : 'Analyze Trends'}
+            {loading ? t.analytics.analyzing : t.analytics.analyzeTrends}
           </button>
 
           {trendsAnalysis && (
             <div className="mt-6 space-y-6">
               {/* Top Movers */}
               <div>
-                <h3 className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3 flex items-center gap-2">
                   <TrendingUp className="w-4 h-4 text-green-600" />
-                  Top Selling Products
+                  {t.analytics.topSellingProducts}
                 </h3>
                 <div className="space-y-2">
                   {trendsAnalysis.topMovers.slice(0, 5).map((product, idx) => (
-                    <div key={product.productId} className="border border-gray-200 rounded-lg p-3">
+                    <div key={product.productId} className="border border-gray-200 dark:border-gray-700 rounded-lg p-3">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
                             <span className="text-xs font-bold text-gray-400">#{idx + 1}</span>
-                            <span className="font-medium text-gray-900">{product.productName}</span>
+                            <span className="font-medium text-gray-900 dark:text-gray-100">{product.productName}</span>
                           </div>
-                          <p className="text-sm text-gray-600 mt-1">{product.trend}</p>
+                          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{product.trend}</p>
                         </div>
                         <div className="text-right">
                           <p className="text-lg font-bold text-green-600">{product.unitsSold}</p>
-                          <p className="text-xs text-gray-500">units sold</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">{t.analytics.unitsSold}</p>
                         </div>
                       </div>
                     </div>
@@ -279,23 +280,23 @@ export default function AnalyticsPage() {
               {/* Slow Movers */}
               {trendsAnalysis.slowMovers.length > 0 && (
                 <div>
-                  <h3 className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3 flex items-center gap-2">
                     <TrendingDown className="w-4 h-4 text-red-600" />
-                    Slow Moving Products
+                    {t.analytics.slowMovingProducts}
                   </h3>
                   <div className="space-y-2">
                     {trendsAnalysis.slowMovers.slice(0, 5).map((product) => (
-                      <div key={product.productId} className="border border-gray-200 rounded-lg p-3">
+                      <div key={product.productId} className="border border-gray-200 dark:border-gray-700 rounded-lg p-3">
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
-                            <span className="font-medium text-gray-900">{product.productName}</span>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">
-                              {product.daysInStock} days in stock
+                            <span className="font-medium text-gray-900 dark:text-gray-100">{product.productName}</span>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                              {product.daysInStock} {t.analytics.daysInStock}
                             </p>
                           </div>
                           <div className="text-right">
                             <p className="text-lg font-bold text-red-600">{product.unitsSold}</p>
-                            <p className="text-xs text-gray-500">units sold</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">{t.analytics.unitsSold}</p>
                           </div>
                         </div>
                       </div>
@@ -306,14 +307,14 @@ export default function AnalyticsPage() {
 
               {/* AI Insights */}
               <div>
-                <h3 className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3 flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-purple-600" />
-                  AI Insights
+                  {t.analytics.aiInsights}
                 </h3>
-                <div className="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 rounded-lg p-4">
+                <div className="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-700 rounded-lg p-4">
                   <ul className="space-y-2">
                     {trendsAnalysis.insights.map((insight, idx) => (
-                      <li key={idx} className="text-sm text-purple-900 flex items-start gap-2">
+                      <li key={idx} className="text-sm text-purple-900 dark:text-purple-100 flex items-start gap-2">
                         <span className="text-purple-600 mt-1">•</span>
                         <span>{insight}</span>
                       </li>
@@ -322,36 +323,36 @@ export default function AnalyticsPage() {
                 </div>
               </div>
 
-              <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 text-center pt-2 border-t border-gray-200">
-                Analysis for {getPeriodLabel(trendsPeriod)}
+              <div className="text-xs text-gray-500 dark:text-gray-400 text-center pt-2 border-t border-gray-200 dark:border-gray-700">
+                {t.analytics.analysisPeriod}: {getPeriodLabel(trendsPeriod)}
               </div>
             </div>
           )}
         </div>
 
         {/* Reorder Prediction */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
           <div className="flex items-center gap-2 mb-4">
             <div className="w-10 h-10 bg-orange-50 dark:bg-orange-900/20 rounded-lg flex items-center justify-center">
-              <Package className="w-5 h-5 text-orange-600" />
+              <Package className="w-5 h-5 text-orange-600 dark:text-orange-400" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-gray-900">Reorder Prediction</h2>
-              <p className="text-sm text-gray-600">AI-powered stock forecasting</p>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">{t.analytics.reorderPrediction}</h2>
+              <p className="text-sm text-gray-600 dark:text-gray-400">{t.analytics.aiPoweredForecasting}</p>
             </div>
           </div>
 
           <div className="space-y-4 mb-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Select Product <span className="text-red-500">*</span>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                {t.analytics.selectProduct} <span className="text-red-500">*</span>
               </label>
               <select
                 value={selectedProductId}
                 onChange={(e) => setSelectedProductId(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
               >
-                <option value="">Choose a product...</option>
+                <option value="">{t.analytics.chooseProduct}</option>
                 {products.map((product) => (
                   <option key={product.id} value={product.id}>
                     {product.name} ({product.sku})
@@ -361,15 +362,15 @@ export default function AnalyticsPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Warehouse (Optional)
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                {t.analytics.warehouse}
               </label>
               <select
                 value={selectedWarehouseId}
                 onChange={(e) => setSelectedWarehouseId(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
               >
-                <option value="">All Warehouses</option>
+                <option value="">{t.analytics.allWarehouses}</option>
                 {warehouses.map((warehouse) => (
                   <option key={warehouse.id} value={warehouse.id}>
                     {warehouse.name}
@@ -385,24 +386,24 @@ export default function AnalyticsPage() {
             className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Sparkles className="w-4 h-4" />
-            {loading ? 'Predicting...' : 'Predict Reorder'}
+            {loading ? t.analytics.predicting : t.analytics.predictReorder}
           </button>
 
           {reorderPrediction && (
             <div className="mt-6 space-y-4">
               {/* Current Status */}
               <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
-                <h3 className="text-sm font-semibold text-gray-900 mb-3">Current Status</h3>
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">{t.analytics.currentStatus}</h3>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <p className="text-xs text-gray-600">Current Stock</p>
-                    <p className="text-xl font-bold text-gray-900">
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{t.analytics.currentStock}</p>
+                    <p className="text-xl font-bold text-gray-900 dark:text-gray-100">
                       {reorderPrediction.currentStock}
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-600">Avg Daily Sales</p>
-                    <p className="text-xl font-bold text-gray-900">
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{t.analytics.avgDailySales}</p>
+                    <p className="text-xl font-bold text-gray-900 dark:text-gray-100">
                       {reorderPrediction.averageDailySales.toFixed(1)}
                     </p>
                   </div>
@@ -413,16 +414,16 @@ export default function AnalyticsPage() {
               <div
                 className={`rounded-lg p-4 ${
                   reorderPrediction.daysToStockout <= 7
-                    ? 'bg-red-50 dark:bg-red-900/20 border border-red-200'
+                    ? 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700'
                     : reorderPrediction.daysToStockout <= 14
-                    ? 'bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200'
-                    : 'bg-green-50 dark:bg-green-900/20 border border-green-200'
+                    ? 'bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700'
+                    : 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700'
                 }`}
               >
-                <h3 className="text-sm font-semibold text-gray-900 mb-3">Prediction</h3>
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-3">{t.analytics.prediction}</h3>
                 <div className="space-y-3">
                   <div>
-                    <p className="text-xs text-gray-600">Days to Stockout</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{t.analytics.daysToStockout}</p>
                     <p
                       className={`text-2xl font-bold ${
                         reorderPrediction.daysToStockout <= 7
@@ -433,61 +434,61 @@ export default function AnalyticsPage() {
                       }`}
                     >
                       {reorderPrediction.daysToStockout === 0
-                        ? 'Out of Stock'
-                        : `${reorderPrediction.daysToStockout} days`}
+                        ? t.analytics.outOfStock
+                        : `${reorderPrediction.daysToStockout} ${t.analytics.days}`}
                     </p>
                   </div>
 
                   <div>
-                    <p className="text-xs text-gray-600">Suggested Reorder Quantity</p>
-                    <p className="text-2xl font-bold text-gray-900">
-                      {reorderPrediction.suggestedReorderQuantity} units
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{t.analytics.suggestedReorderQuantity}</p>
+                    <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                      {reorderPrediction.suggestedReorderQuantity} {t.analytics.units}
                     </p>
                   </div>
 
                   <div>
-                    <p className="text-xs text-gray-600 mb-1">Confidence Level</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">{t.analytics.confidenceLevel}</p>
                     <span
                       className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getConfidenceColor(
                         reorderPrediction.confidence
                       )}`}
                     >
-                      {reorderPrediction.confidence.toUpperCase()}
+                      {reorderPrediction.confidence === 'high' ? t.analytics.high : reorderPrediction.confidence === 'medium' ? t.analytics.medium : t.analytics.low}
                     </span>
                   </div>
                 </div>
               </div>
 
               {/* AI Reasoning */}
-              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 rounded-lg p-4">
-                <h3 className="text-sm font-semibold text-gray-900 mb-2 flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-blue-600" />
-                  AI Reasoning
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2 flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                  {t.analytics.aiReasoning}
                 </h3>
-                <p className="text-sm text-gray-700">{reorderPrediction.reasoning}</p>
+                <p className="text-sm text-gray-700 dark:text-gray-300">{reorderPrediction.reasoning}</p>
               </div>
 
               {/* Recommendation */}
               {reorderPrediction.daysToStockout <= 14 && (
-                <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 rounded-lg p-4">
+                <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-700 rounded-lg p-4">
                   <div className="flex items-start gap-2">
                     <AlertCircle className="w-5 h-5 text-orange-600 flex-shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-sm font-medium text-orange-900">
-                        Action Recommended
+                      <p className="text-sm font-medium text-orange-900 dark:text-orange-100">
+                        {t.analytics.actionRecommended}
                       </p>
-                      <p className="text-sm text-orange-800 mt-1">
+                      <p className="text-sm text-orange-800 dark:text-orange-200 mt-1">
                         {reorderPrediction.daysToStockout <= 7
-                          ? 'Critical: Reorder immediately to avoid stockout'
-                          : 'Warning: Consider placing a reorder soon'}
+                          ? t.analytics.criticalReorder
+                          : t.analytics.warningReorder}
                       </p>
                     </div>
                   </div>
                 </div>
               )}
 
-              <div className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 text-center pt-2 border-t border-gray-200">
-                Prediction based on last 30 days of sales data
+              <div className="text-xs text-gray-500 dark:text-gray-400 text-center pt-2 border-t border-gray-200 dark:border-gray-700">
+                {t.analytics.predictionBasedOn}
               </div>
             </div>
           )}
@@ -495,23 +496,20 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Info Banner */}
-      <div className="mt-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 rounded-lg p-4">
+      <div className="mt-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
         <div className="flex items-start gap-3">
-          <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-            <BarChart3 className="w-5 h-5 text-blue-600" />
+          <div className="w-10 h-10 bg-blue-100 dark:bg-blue-800 rounded-lg flex items-center justify-center flex-shrink-0">
+            <BarChart3 className="w-5 h-5 text-blue-600 dark:text-blue-400" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-blue-900 mb-1">
-              AI-Powered Analytics
+            <h3 className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-1">
+              {t.analytics.aiPoweredAnalytics}
             </h3>
-            <p className="text-sm text-blue-800">
-              These insights are generated using Google Gemini AI based on your real inventory and
-              sales data. The AI analyzes patterns, trends, and consumption rates to provide
-              actionable recommendations for inventory management.
+            <p className="text-sm text-blue-800 dark:text-blue-200">
+              {t.analytics.aiDescription}
             </p>
-            <p className="text-xs text-blue-700 mt-2">
-              Note: AI predictions are estimates and should be combined with your business knowledge
-              and market conditions.
+            <p className="text-xs text-blue-700 dark:text-blue-300 mt-2">
+              {t.analytics.aiNote}
             </p>
           </div>
         </div>
