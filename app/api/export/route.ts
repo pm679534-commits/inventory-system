@@ -279,9 +279,9 @@ export async function POST(request: NextRequest) {
     }
 
     let data: any[] = [];
-    let contentType: string;
-    let fileExtension: string;
-    let fileContent: Buffer | string;
+    let contentType = '';
+    let fileExtension = '';
+    let fileContent: Buffer | string = '';
 
     // Fetch data based on entity type with explicit field selection (security)
     if (entityType === 'products') {
@@ -350,6 +350,9 @@ export async function POST(request: NextRequest) {
         contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
         fileExtension = 'xlsx';
       }
+    } else {
+      // This should never happen due to validation above, but TypeScript requires it
+      return NextResponse.json({ error: 'Yanlış ixrac növü' }, { status: 400 });
     }
 
     // Audit logging
@@ -364,7 +367,10 @@ export async function POST(request: NextRequest) {
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').substring(0, 19);
     const filename = `${entityType}_export_${timestamp}.${fileExtension}`;
 
-    return new NextResponse(fileContent, {
+    // Convert Buffer to Uint8Array for NextResponse compatibility
+    const responseBody = Buffer.isBuffer(fileContent) ? new Uint8Array(fileContent) : fileContent;
+
+    return new NextResponse(responseBody, {
       status: 200,
       headers: {
         'Content-Type': contentType,
