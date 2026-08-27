@@ -193,13 +193,22 @@ export async function generateExcelExport(
   return Buffer.from(buffer);
 }
 
-export function getExportFilename(type: 'excel' | '1c_xml', filters: ExportFilterInput): string {
+export function getExportFilename(
+  type: 'excel' | '1c_xml',
+  exportType: string,
+  filters: ExportFilterInput
+): string {
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-').substring(0, 19);
-  const filterSuffix = filters.warehouseId ? '_filtered' : '';
+  const filterSuffix = filters.warehouseId || filters.categoryId ? '_filtered' : '';
+
+  let baseName = 'inventory_export';
+  if (exportType !== 'all') {
+    baseName = `${exportType}_export`;
+  }
 
   if (type === 'excel') {
-    return `inventory_export_${timestamp}${filterSuffix}.xlsx`;
+    return `${baseName}_${timestamp}${filterSuffix}.xlsx`;
   } else {
-    return `inventory_export_${timestamp}${filterSuffix}.zip`;
+    return `${baseName}_${timestamp}${filterSuffix}.zip`;
   }
 }

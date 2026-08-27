@@ -39,10 +39,15 @@ export const updateUserRoleSchema = z.object({
 
 // Export filter schemas
 export const exportFilterSchema = z.object({
+  exportType: z.enum(['products', 'warehouses', 'orders', 'all']).default('products'),
+  format: z.enum(['excel', 'csv', '1c_xml']).default('excel'),
   stockFilter: z.enum(['all', 'in_stock', 'out_of_stock']).optional(),
   warehouseId: z.string().uuid().optional(),
   categoryId: z.string().uuid().optional(),
   status: z.enum(['active', 'inactive', 'discontinued']).optional(),
+  orderStatus: z.enum(['pending', 'processing', 'shipped', 'delivered', 'cancelled']).optional(),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
 });
 
 // AI request schemas

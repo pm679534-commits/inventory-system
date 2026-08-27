@@ -56,6 +56,7 @@ export async function POST(request: NextRequest) {
     }
 
     const filters = validation.data;
+    const exportType = filters.exportType || 'products';
 
     // Build query
     let query = supabase
@@ -185,7 +186,7 @@ export async function POST(request: NextRequest) {
       file_size_bytes: buffer.length,
     });
 
-    const filename = getExportFilename('1c_xml', filters);
+    const filename = getExportFilename('1c_xml', exportType, filters);
 
     return new NextResponse(new Uint8Array(buffer), {
       status: 200,
