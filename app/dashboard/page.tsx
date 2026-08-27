@@ -2,6 +2,10 @@ import { createClient } from '@/lib/supabase/server';
 import { Package, Warehouse, ShoppingCart, TrendingUp } from 'lucide-react';
 import { t } from '@/lib/i18n';
 
+// Disable caching to ensure fresh data
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function DashboardPage() {
   const supabase = await createClient();
   const {
@@ -14,7 +18,7 @@ export default async function DashboardPage() {
     .eq('id', user!.id)
     .single();
 
-  // Fetch real stats
+  // Fetch real stats with optimized queries
   const { count: productsCount } = await supabase
     .from('products')
     .select('*', { count: 'exact', head: true });
@@ -45,8 +49,8 @@ export default async function DashboardPage() {
         <p className="text-gray-600 dark:text-gray-400">{t.dashboard.todayActivity}</p>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      {/* Stats Grid - Responsive with mobile-first design */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
         <StatCard
           title={t.stats.totalProducts}
           value={productsCount?.toString() || '0'}
@@ -75,7 +79,7 @@ export default async function DashboardPage() {
 
       {/* Content Based on Data */}
       {(productsCount || 0) === 0 && (warehousesCount || 0) === 0 ? (
-        <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-12 text-center">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-8 sm:p-12 text-center">
           <div className="max-w-md mx-auto">
             <div className="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
               <Package className="w-8 h-8 text-blue-600 dark:text-blue-400" />
@@ -89,9 +93,9 @@ export default async function DashboardPage() {
           </div>
         </div>
       ) : (
-        <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-8">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 sm:p-8">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">{t.dashboard.quickLinks}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <QuickLink href="/dashboard/products" title="Məhsulları İdarə Et" description="Məhsul kataloquna baxın və redaktə edin" />
             <QuickLink href="/dashboard/warehouses" title="Anbarları İdarə Et" description="Anbar stok səviyyələrini görün" />
             <QuickLink href="/dashboard/orders" title="Sifarişlərə Baxın" description="Sifarişləri izləyin və idarə edin" />
@@ -110,7 +114,7 @@ function QuickLink({ href, title, description }: { href: string; title: string; 
   return (
     <a
       href={href}
-      className="p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-600 hover:shadow-md transition-all"
+      className="block p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-600 hover:shadow-md transition-all"
     >
       <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">{title}</h3>
       <p className="text-sm text-gray-600 dark:text-gray-400">{description}</p>
@@ -130,10 +134,10 @@ function StatCard({
   color: 'blue' | 'green' | 'orange' | 'purple';
 }) {
   const colorClasses = {
-    blue: 'bg-blue-50 text-blue-600',
-    green: 'bg-green-50 text-green-600',
-    orange: 'bg-orange-50 text-orange-600',
-    purple: 'bg-purple-50 text-purple-600',
+    blue: 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400',
+    green: 'bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400',
+    orange: 'bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400',
+    purple: 'bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400',
   };
 
   return (

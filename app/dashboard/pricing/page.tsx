@@ -96,17 +96,17 @@ export default function PricingPage() {
   return (
     <div className="max-w-7xl mx-auto">
       {/* Header */}
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+      <div className="text-center mb-8 sm:mb-12">
+        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
           Qiymətləndirmə və Planlar
         </h1>
-        <p className="text-xl text-gray-600 dark:text-gray-400">
+        <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400">
           Biznesinizə uyğun planı seçin
         </p>
       </div>
 
       {/* Pricing Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-12 sm:mb-16">
         {plans.map((plan) => {
           const colors = colorClasses[plan.color as keyof typeof colorClasses];
           return (

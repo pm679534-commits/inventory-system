@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
     // Check if API key is configured
     if (!validateAPIKey()) {
       return NextResponse.json(
-        { error: 'AI service not configured' },
+        { error: 'AI xidməti konfiqurasiya olunmayıb' },
         { status: 503 }
       );
     }
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
 
     if (!rateCheck.allowed) {
       return NextResponse.json(
-        { error: 'Too many AI requests. Please try again later.' },
+        { error: 'Çox sayda AI sorğusu. Zəhmət olmasa bir az sonra yenidən cəhd edin.' },
         {
           status: 429,
           headers: getRateLimitHeaders(20, rateCheck.remaining, rateCheck.resetAt),
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'İcazəsiz giriş' }, { status: 401 });
     }
 
     // All authenticated users can access AI analytics
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (!profile) {
-      return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Profil tapılmadı' }, { status: 404 });
     }
 
     // Parse and validate request
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
 
     if (!validation.success) {
       return NextResponse.json(
-        { error: 'Invalid request', details: validation.error.issues },
+        { error: 'Yanlış sorğu', details: validation.error.issues },
         { status: 400 }
       );
     }
@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
     if (orderItemsError) {
       console.error('Error fetching order items:', orderItemsError);
       return NextResponse.json(
-        { error: 'Failed to fetch sales data' },
+        { error: 'Satış məlumatları yüklənə bilmədi' },
         { status: 500 }
       );
     }

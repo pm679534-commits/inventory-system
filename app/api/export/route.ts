@@ -259,9 +259,10 @@ export async function POST(request: NextRequest) {
       .eq('id', user.id)
       .single();
 
+    // Allow Admin and Manager roles to export - Staff cannot export
     if (!profile || (profile.role !== 'Admin' && profile.role !== 'Manager')) {
       return NextResponse.json(
-        { error: 'Qadağan. Bu əməliyyatı yerinə yetirmək üçün icazəniz yoxdur.' },
+        { error: 'Bu funksiya yalnız administratorlar və menecerlər üçün əlçatandır.' },
         { status: 403 }
       );
     }

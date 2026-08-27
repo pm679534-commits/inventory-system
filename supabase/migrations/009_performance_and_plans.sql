@@ -8,6 +8,9 @@ CREATE INDEX IF NOT EXISTS orders_status_created_at_idx ON public.orders(status,
 -- Products created_at index for recent products
 CREATE INDEX IF NOT EXISTS products_created_at_idx ON public.products(created_at DESC);
 
+-- Products name index for search queries (case-insensitive with text_pattern_ops)
+CREATE INDEX IF NOT EXISTS products_name_idx ON public.products USING btree (name text_pattern_ops);
+
 -- Stock composite index for warehouse + product lookups
 CREATE INDEX IF NOT EXISTS stock_warehouse_product_idx ON public.stock(warehouse_id, product_id);
 
@@ -16,6 +19,9 @@ CREATE INDEX IF NOT EXISTS order_items_order_product_idx ON public.order_items(o
 
 -- Export audit created_at index for audit log queries
 CREATE INDEX IF NOT EXISTS export_audit_created_at_desc_idx ON public.export_audit(created_at DESC);
+
+-- Profiles email index for faster user lookups
+CREATE INDEX IF NOT EXISTS profiles_email_text_idx ON public.profiles USING btree (email text_pattern_ops);
 
 -- Subscription Plans Table
 CREATE TABLE IF NOT EXISTS public.subscription_plans (

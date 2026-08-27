@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
     // Check if API key is configured
     if (!validateAPIKey()) {
       return NextResponse.json(
-        { error: 'AI service not configured' },
+        { error: 'AI xidməti konfiqurasiya olunmayıb' },
         { status: 503 }
       );
     }
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
 
     if (!rateCheck.allowed) {
       return NextResponse.json(
-        { error: 'Too many AI requests. Please try again later.' },
+        { error: 'Çox sayda AI sorğusu. Zəhmət olmasa bir az sonra yenidən cəhd edin.' },
         {
           status: 429,
           headers: getRateLimitHeaders(50, rateCheck.remaining, rateCheck.resetAt),
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'İcazəsiz giriş' }, { status: 401 });
     }
 
     const { data: profile } = await supabase
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (!profile || (profile.role !== 'Admin' && profile.role !== 'Manager')) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+      return NextResponse.json({ error: 'Bu funksiya yalnız administratorlar və menecerlər üçün əlçatandır' }, { status: 403 });
     }
 
     // Parse and validate request
@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
 
     if (!validation.success) {
       return NextResponse.json(
-        { error: 'Invalid request', details: validation.error.issues },
+        { error: 'Yanlış sorğu', details: validation.error.issues },
         { status: 400 }
       );
     }
@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('AI description generation error:', error);
     return NextResponse.json(
-      { error: 'Generation failed. Please try again.' },
+      { error: 'Təsvir yaratma uğursuz oldu. Zəhmət olmasa yenidən cəhd edin.' },
       { status: 500 }
     );
   }

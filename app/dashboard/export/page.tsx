@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { FileSpreadsheet, FileType, Download, Loader2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { FileSpreadsheet, FileType, Download, Loader2, Lock } from 'lucide-react';
 import { t } from '@/lib/i18n';
 
 type EntityType = 'products' | 'warehouses' | 'orders';
@@ -12,6 +12,27 @@ export default function ExportPage() {
   const [format, setFormat] = useState<ExportFormat>('excel');
   const [isExporting, setIsExporting] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Fetch user profile to check role
+    const fetchProfile = async () => {
+      try {
+        const response = await fetch('/api/profile');
+        if (response.ok) {
+          const profile = await response.json();
+          setUserRole(profile.role);
+        }
+      } catch (error) {
+        console.error('Profile fetch error:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, []);
 
   const handleExport = async () => {
     setIsExporting(true);
@@ -73,17 +94,36 @@ export default function ExportPage() {
         <p className="text-gray-600 dark:text-gray-400">{t.exports.subtitle}</p>
       </div>
 
-      {message && (
-        <div
-          className={`mb-6 p-4 rounded-lg ${
-            message.type === 'error'
-              ? 'bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-200 border border-red-200 dark:border-red-800'
-              : 'bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-200 border border-green-200 dark:border-green-800'
-          }`}
-        >
-          {message.text}
+      {loading ? (
+        <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-12 text-center">
+          <Loader2 className="w-8 h-8 text-blue-600 dark:text-blue-400 animate-spin mx-auto mb-4" />
+          <p className="text-gray-600 dark:text-gray-400">Yüklənir...</p>
         </div>
-      )}
+      ) : userRole && userRole !== 'Admin' && userRole !== 'Manager' ? (
+        <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-12 text-center">
+          <div className="w-16 h-16 bg-orange-50 dark:bg-orange-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Lock className="w-8 h-8 text-orange-600 dark:text-orange-400" />
+          </div>
+          <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
+            Giriş məhduddur
+          </h3>
+          <p className="text-gray-600 dark:text-gray-400">
+            Bu funksiya yalnız administratorlar və menecerlər üçün əlçatandır.
+          </p>
+        </div>
+      ) : (
+        <>
+          {message && (
+            <div
+              className={`mb-6 p-4 rounded-lg ${
+                message.type === 'error'
+                  ? 'bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-200 border border-red-200 dark:border-red-800'
+                  : 'bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-200 border border-green-200 dark:border-green-800'
+              }`}
+            >
+              {message.text}
+            </div>
+          )}
 
       <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-8">
         <div className="space-y-6">
@@ -223,6 +263,8 @@ export default function ExportPage() {
           <strong>Qeyd:</strong> {t.exports.auditNote}
         </p>
       </div>
+        </>
+      )}
     </div>
   );
 }

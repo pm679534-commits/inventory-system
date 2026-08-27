@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { z } from 'zod';
 
+// Always fetch fresh profile/plan data - no caching
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 const updateProfileSchema = z.object({
   fullName: z.string().min(1).max(200).optional(),
 });
@@ -22,6 +26,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // Fetch fresh profile data from Supabase - never cached
     const { data: profile, error } = await supabase
       .from('profiles')
       .select('*')
