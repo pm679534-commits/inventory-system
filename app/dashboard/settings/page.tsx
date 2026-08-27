@@ -193,9 +193,9 @@ export default function SettingsPage() {
   if (loading) {
     return (
       <div className="max-w-4xl mx-auto">
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 p-12 text-center">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-12 text-center">
           <div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-          <p className="mt-4 text-gray-600">Loading settings...</p>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading settings...</p>
         </div>
       </div>
     );
@@ -204,18 +204,18 @@ export default function SettingsPage() {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Settings</h1>
-        <p className="text-gray-600">Manage your account and application preferences</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">Settings</h1>
+        <p className="text-gray-600 dark:text-gray-400">Manage your account and application preferences</p>
       </div>
 
       {error && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 text-red-700 dark:text-red-400 px-4 py-3 rounded-lg mb-6">
           {error}
         </div>
       )}
 
       {successMessage && (
-        <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6 flex items-center gap-2">
+        <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 text-green-700 dark:text-green-400 px-4 py-3 rounded-lg mb-6 flex items-center gap-2">
           <CheckCircle className="w-5 h-5" />
           {successMessage}
         </div>
@@ -223,64 +223,64 @@ export default function SettingsPage() {
 
       <div className="space-y-6">
         {/* Profile Settings */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200">
-          <div className="p-6 border-b border-gray-200">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+          <div className="p-6 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex items-center justify-center">
-                <User className="w-5 h-5 text-blue-600" />
+                <User className="w-5 h-5 text-blue-600 dark:text-blue-400" />
               </div>
               <div>
-                <h2 className="text-lg font-bold text-gray-900">Profile Settings</h2>
-                <p className="text-sm text-gray-600">Update your personal information</p>
+                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">Profile Settings</h2>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Update your personal information</p>
               </div>
             </div>
           </div>
 
           <div className="p-6 space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Full Name
               </label>
               <input
                 type="text"
                 value={settings.profile.full_name}
                 onChange={(e) => updateProfileSetting('full_name', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
                 placeholder="Enter your full name"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Email Address
               </label>
               <input
                 type="email"
                 value={settings.profile.email}
                 disabled
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 text-gray-500 dark:text-gray-400 dark:text-gray-500 cursor-not-allowed"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-900 text-gray-500 dark:text-gray-400 cursor-not-allowed"
               />
-              <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">Email cannot be changed</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Email cannot be changed</p>
             </div>
 
             {profile && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Role
                 </label>
                 <div className="flex items-center gap-2">
                   <span
                     className={`inline-flex px-3 py-1 text-sm font-medium rounded-full ${
                       profile.role === 'Admin'
-                        ? 'bg-purple-100 text-purple-800'
+                        ? 'bg-purple-100 dark:bg-purple-900/20 text-purple-800 dark:text-purple-300'
                         : profile.role === 'Manager'
-                        ? 'bg-blue-100 text-blue-800'
-                        : 'bg-gray-100 dark:bg-gray-800 text-gray-800'
+                        ? 'bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-300'
+                        : 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300'
                     }`}
                   >
                     {profile.role}
                   </span>
-                  <p className="text-xs text-gray-500">Contact an admin to change your role</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Contact an admin to change your role</p>
                 </div>
               </div>
             )}
@@ -288,22 +288,22 @@ export default function SettingsPage() {
         </div>
 
         {/* Notification Settings */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200">
-          <div className="p-6 border-b border-gray-200">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+          <div className="p-6 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg flex items-center justify-center">
-                <Bell className="w-5 h-5 text-yellow-600" />
+                <Bell className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
               </div>
               <div>
-                <h2 className="text-lg font-bold text-gray-900">Notification Settings</h2>
-                <p className="text-sm text-gray-600">Configure alerts and notifications</p>
+                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">Notification Settings</h2>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Configure alerts and notifications</p>
               </div>
             </div>
           </div>
 
           <div className="p-6 space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Low Stock Threshold
               </label>
               <div className="flex items-center gap-3">
@@ -315,19 +315,19 @@ export default function SettingsPage() {
                   onChange={(e) =>
                     updateNotificationSetting('low_stock_threshold', parseInt(e.target.value))
                   }
-                  className="w-32 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-32 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
                 />
-                <span className="text-sm text-gray-600">units</span>
+                <span className="text-sm text-gray-600 dark:text-gray-400">units</span>
               </div>
-              <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                 Get notified when product stock falls below this threshold
               </p>
             </div>
 
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-700">Email Notifications</p>
-                <p className="text-xs text-gray-500">
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Email Notifications</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
                   Receive email alerts for important inventory events
                 </p>
               </div>
@@ -344,8 +344,8 @@ export default function SettingsPage() {
               </label>
             </div>
 
-            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 rounded-lg p-4">
-              <p className="text-sm text-yellow-800">
+            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-lg p-4">
+              <p className="text-sm text-yellow-800 dark:text-yellow-200">
                 <strong>Note:</strong> Low stock notifications will appear in the dashboard when
                 products fall below the threshold. Email notifications require SMTP configuration.
               </p>
@@ -354,53 +354,53 @@ export default function SettingsPage() {
         </div>
 
         {/* Display Settings */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200">
-          <div className="p-6 border-b border-gray-200">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+          <div className="p-6 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-purple-50 dark:bg-purple-900/20 rounded-lg flex items-center justify-center">
-                <Palette className="w-5 h-5 text-purple-600" />
+                <Palette className="w-5 h-5 text-purple-600 dark:text-purple-400" />
               </div>
               <div>
-                <h2 className="text-lg font-bold text-gray-900">Display Settings</h2>
-                <p className="text-sm text-gray-600">Customize your viewing experience</p>
+                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">Display Settings</h2>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Customize your viewing experience</p>
               </div>
             </div>
           </div>
 
           <div className="p-6 space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Items Per Page
               </label>
               <select
                 value={settings.display.items_per_page}
                 onChange={(e) => updateDisplaySetting('items_per_page', parseInt(e.target.value))}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
               >
                 <option value={10}>10 items</option>
                 <option value={20}>20 items</option>
                 <option value={50}>50 items</option>
                 <option value={100}>100 items</option>
               </select>
-              <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                 Number of items to display in tables and lists
               </p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Theme Preference
               </label>
               <select
                 value={settings.display.theme}
                 onChange={(e) => updateDisplaySetting('theme', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
               >
                 <option value="light">Light</option>
                 <option value="dark">Dark</option>
                 <option value="auto">Auto (System)</option>
               </select>
-              <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                 Choose your preferred color theme (applies immediately)
               </p>
             </div>
@@ -420,8 +420,8 @@ export default function SettingsPage() {
         </div>
 
         {/* Help Text */}
-        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 rounded-lg p-4">
-          <p className="text-sm text-blue-800">
+        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
+          <p className="text-sm text-blue-800 dark:text-blue-200">
             <strong>Note:</strong> Settings are saved to your account and will be available across
             all your sessions. Changes to display preferences may require a page reload to take
             full effect.
