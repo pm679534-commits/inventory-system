@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Package } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { registerSchema, type RegisterInput } from '@/lib/validations';
+import { t } from '@/lib/i18n';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -69,7 +70,7 @@ export default function RegisterPage() {
 
         setMessage({
           type: 'success',
-          text: 'Account created! Please check your email to verify your account.',
+          text: t.auth.checkInbox,
         });
 
         // Redirect after a delay
@@ -78,7 +79,7 @@ export default function RegisterPage() {
         }, 3000);
       }
     } catch (error) {
-      setMessage({ type: 'error', text: 'An unexpected error occurred' });
+      setMessage({ type: 'error', text: t.auth.unexpectedError });
     } finally {
       setIsLoading(false);
     }
@@ -93,7 +94,7 @@ export default function RegisterPage() {
             <Link href="/" className="flex items-center space-x-2">
               <Package className="w-7 h-7 text-blue-600" />
               <span className="text-xl font-semibold tracking-tight text-gray-900">
-                Warehouse
+                {t.landing.warehouse}
               </span>
             </Link>
           </div>
@@ -106,9 +107,9 @@ export default function RegisterPage() {
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold tracking-tight text-gray-900 mb-2">
-                Create your account
+                {t.auth.createAccount}
               </h1>
-              <p className="text-gray-600">Get started with your free account</p>
+              <p className="text-gray-600">{t.landing.getStartedFree}</p>
             </div>
 
             {message && (
@@ -126,7 +127,7 @@ export default function RegisterPage() {
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
                 <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Full name (optional)
+                  {t.auth.fullName} ({t.common.all})
                 </label>
                 <input
                   id="fullName"
@@ -137,14 +138,14 @@ export default function RegisterPage() {
                   className={`w-full px-4 py-2.5 rounded-lg border ${
                     errors.fullName ? 'border-red-300' : 'border-gray-300'
                   } focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all`}
-                  placeholder="John Doe"
+                  placeholder={t.auth.enterFullName}
                 />
                 {errors.fullName && <p className="mt-1.5 text-sm text-red-600">{errors.fullName}</p>}
               </div>
 
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Email address
+                  {t.auth.emailAddress}
                 </label>
                 <input
                   id="email"
@@ -155,14 +156,14 @@ export default function RegisterPage() {
                   className={`w-full px-4 py-2.5 rounded-lg border ${
                     errors.email ? 'border-red-300' : 'border-gray-300'
                   } focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all`}
-                  placeholder="you@example.com"
+                  placeholder={t.auth.emailPlaceholder}
                 />
                 {errors.email && <p className="mt-1.5 text-sm text-red-600">{errors.email}</p>}
               </div>
 
               <div>
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Password
+                  {t.auth.password}
                 </label>
                 <input
                   id="password"
@@ -173,14 +174,14 @@ export default function RegisterPage() {
                   className={`w-full px-4 py-2.5 rounded-lg border ${
                     errors.password ? 'border-red-300' : 'border-gray-300'
                   } focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all`}
-                  placeholder="••••••••"
+                  placeholder={t.auth.passwordPlaceholder}
                 />
                 {errors.password && <p className="mt-1.5 text-sm text-red-600">{errors.password}</p>}
               </div>
 
               <div>
                 <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Confirm password
+                  {t.auth.confirmPassword}
                 </label>
                 <input
                   id="confirmPassword"
@@ -191,7 +192,7 @@ export default function RegisterPage() {
                   className={`w-full px-4 py-2.5 rounded-lg border ${
                     errors.confirmPassword ? 'border-red-300' : 'border-gray-300'
                   } focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all`}
-                  placeholder="••••••••"
+                  placeholder={t.auth.passwordPlaceholder}
                 />
                 {errors.confirmPassword && (
                   <p className="mt-1.5 text-sm text-red-600">{errors.confirmPassword}</p>
@@ -203,15 +204,15 @@ export default function RegisterPage() {
                 disabled={isLoading}
                 className="w-full py-2.5 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               >
-                {isLoading ? 'Creating account...' : 'Create account'}
+                {isLoading ? t.auth.creating : t.auth.createAccount}
               </button>
             </form>
 
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">
-                Already have an account?{' '}
+                {t.auth.alreadyHaveAccount}{' '}
                 <Link href="/auth/login" className="font-medium text-blue-600 hover:text-blue-700">
-                  Sign in
+                  {t.auth.signIn}
                 </Link>
               </p>
             </div>

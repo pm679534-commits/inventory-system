@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    // Load theme preference from settings
+    // Load theme preference from settings on initial mount
     const loadTheme = async () => {
       try {
         const response = await fetch('/api/settings');
@@ -19,6 +19,19 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     };
 
     loadTheme();
+
+    // Listen for storage events to sync theme across tabs
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'theme-preference') {
+        const theme = e.newValue as 'light' | 'dark' | 'auto' | null;
+        if (theme) {
+          applyTheme(theme);
+        }
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   const applyTheme = (theme: 'light' | 'dark' | 'auto') => {
@@ -29,6 +42,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     } else {
       document.documentElement.classList.toggle('dark', theme === 'dark');
     }
+    // Store theme preference in localStorage for cross-tab sync
+    localStorage.setItem('theme-preference', theme);
   };
 
   return <>{children}</>;

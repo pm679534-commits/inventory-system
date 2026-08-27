@@ -20,6 +20,7 @@ import {
 import { createClient } from '@/lib/supabase/client';
 import type { Profile } from '@/lib/types';
 import type { User } from '@supabase/supabase-js';
+import { t } from '@/lib/i18n';
 
 interface AdminNavProps {
   user: User;
@@ -39,13 +40,13 @@ export default function AdminNav({ user, profile }: AdminNavProps) {
   };
 
   const navigation = [
-    { name: 'Overview', href: '/admin', icon: LayoutDashboard },
-    { name: 'Users', href: '/admin/users', icon: Users },
-    { name: 'Products', href: '/admin/products', icon: Package },
-    { name: 'Warehouses', href: '/admin/warehouses', icon: Warehouse },
-    { name: 'Orders', href: '/admin/orders', icon: ShoppingCart },
-    { name: 'Exports', href: '/admin/exports', icon: FileText },
-    { name: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
+    { name: t.nav.overview, href: '/admin', icon: LayoutDashboard },
+    { name: t.nav.users, href: '/admin/users', icon: Users },
+    { name: t.nav.products, href: '/admin/products', icon: Package },
+    { name: t.nav.warehouses, href: '/admin/warehouses', icon: Warehouse },
+    { name: t.nav.orders, href: '/admin/orders', icon: ShoppingCart },
+    { name: t.nav.exports, href: '/admin/exports', icon: FileText },
+    { name: t.nav.analytics, href: '/admin/analytics', icon: BarChart3 },
   ];
 
   return (
@@ -56,7 +57,7 @@ export default function AdminNav({ user, profile }: AdminNavProps) {
           <Link href="/admin" className="flex items-center space-x-2">
             <Package className="w-7 h-7 text-blue-600" />
             <span className="text-xl font-semibold tracking-tight text-gray-900">
-              Admin Panel
+              {t.nav.adminPanel}
             </span>
           </Link>
           <button
@@ -88,7 +89,7 @@ export default function AdminNav({ user, profile }: AdminNavProps) {
             <Link href="/admin" className="flex items-center space-x-2">
               <Package className="w-7 h-7 text-blue-600" />
               <span className="text-xl font-semibold tracking-tight text-gray-900">
-                Admin Panel
+                {t.nav.adminPanel}
               </span>
             </Link>
           </div>
@@ -138,14 +139,14 @@ export default function AdminNav({ user, profile }: AdminNavProps) {
               className="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
             >
               <ArrowLeft className="w-5 h-5" />
-              <span>Back to Dashboard</span>
+              <span>{t.nav.backToDashboard}</span>
             </Link>
             <button
               onClick={handleLogout}
               className="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 w-full transition-colors"
             >
               <LogOut className="w-5 h-5" />
-              <span>Log out</span>
+              <span>{t.nav.logOut}</span>
             </button>
           </div>
         </div>

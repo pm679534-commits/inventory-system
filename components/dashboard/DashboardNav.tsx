@@ -20,6 +20,7 @@ import {
 import { createClient } from '@/lib/supabase/client';
 import type { Profile } from '@/lib/types';
 import type { User } from '@supabase/supabase-js';
+import { t } from '@/lib/i18n';
 
 interface DashboardNavProps {
   user: User;
@@ -41,22 +42,22 @@ export default function DashboardNav({ user, profile }: DashboardNavProps) {
   const isAdmin = profile?.role === 'Admin';
 
   const navigation = [
-    { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-    { name: 'Products', href: '/dashboard/products', icon: Package },
-    { name: 'Warehouses', href: '/dashboard/warehouses', icon: Warehouse },
-    { name: 'Orders', href: '/dashboard/orders', icon: ShoppingCart },
-    { name: 'Reports', href: '/dashboard/reports', icon: FileText },
-    { name: 'Analytics', href: '/dashboard/analytics', icon: BarChart3 },
+    { name: t.nav.dashboard, href: '/dashboard', icon: LayoutDashboard },
+    { name: t.nav.products, href: '/dashboard/products', icon: Package },
+    { name: t.nav.warehouses, href: '/dashboard/warehouses', icon: Warehouse },
+    { name: t.nav.orders, href: '/dashboard/orders', icon: ShoppingCart },
+    { name: t.nav.reports, href: '/dashboard/reports', icon: FileText },
+    { name: t.nav.analytics, href: '/dashboard/analytics', icon: BarChart3 },
   ];
 
   const bottomNavigation = [
-    { name: 'Profile', href: '/dashboard/profile', icon: UserIcon },
-    { name: 'Settings', href: '/dashboard/settings', icon: Settings },
+    { name: t.nav.profile, href: '/dashboard/profile', icon: UserIcon },
+    { name: t.nav.settings, href: '/dashboard/settings', icon: Settings },
   ];
 
   if (isAdmin) {
     bottomNavigation.unshift({
-      name: 'Admin Panel',
+      name: t.nav.adminPanel,
       href: '/admin',
       icon: Users,
     });
@@ -70,7 +71,7 @@ export default function DashboardNav({ user, profile }: DashboardNavProps) {
           <Link href="/dashboard" className="flex items-center space-x-2">
             <Package className="w-7 h-7 text-blue-600" />
             <span className="text-xl font-semibold tracking-tight text-gray-900">
-              Warehouse
+              {t.landing.warehouse}
             </span>
           </Link>
           <button
@@ -102,7 +103,7 @@ export default function DashboardNav({ user, profile }: DashboardNavProps) {
             <Link href="/dashboard" className="flex items-center space-x-2">
               <Package className="w-7 h-7 text-blue-600" />
               <span className="text-xl font-semibold tracking-tight text-gray-900">
-                Warehouse
+                {t.landing.warehouse}
               </span>
             </Link>
           </div>
@@ -169,7 +170,7 @@ export default function DashboardNav({ user, profile }: DashboardNavProps) {
               className="flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 w-full transition-colors"
             >
               <LogOut className="w-5 h-5" />
-              <span>Log out</span>
+              <span>{t.nav.logOut}</span>
             </button>
           </div>
         </div>

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Package } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { resetPasswordSchema, type ResetPasswordInput } from '@/lib/validations';
+import { t } from '@/lib/i18n';
 
 export default function ResetPasswordPage() {
   const [formData, setFormData] = useState<ResetPasswordInput>({
@@ -46,11 +47,11 @@ export default function ResetPasswordPage() {
 
       setMessage({
         type: 'success',
-        text: 'Password reset link sent! Check your email for instructions.',
+        text: t.auth.resetLinkSent,
       });
       setFormData({ email: '' });
     } catch (error) {
-      setMessage({ type: 'error', text: 'An unexpected error occurred' });
+      setMessage({ type: 'error', text: t.auth.unexpectedError });
     } finally {
       setIsLoading(false);
     }
@@ -65,7 +66,7 @@ export default function ResetPasswordPage() {
             <Link href="/" className="flex items-center space-x-2">
               <Package className="w-7 h-7 text-blue-600" />
               <span className="text-xl font-semibold tracking-tight text-gray-900">
-                Warehouse
+                {t.landing.warehouse}
               </span>
             </Link>
           </div>
@@ -78,10 +79,10 @@ export default function ResetPasswordPage() {
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold tracking-tight text-gray-900 mb-2">
-                Reset your password
+                {t.auth.resetPasswordTitle}
               </h1>
               <p className="text-gray-600">
-                Enter your email address and we'll send you a link to reset your password
+                {t.auth.resetPasswordDesc}
               </p>
             </div>
 
@@ -100,7 +101,7 @@ export default function ResetPasswordPage() {
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Email address
+                  {t.auth.emailAddress}
                 </label>
                 <input
                   id="email"
@@ -111,7 +112,7 @@ export default function ResetPasswordPage() {
                   className={`w-full px-4 py-2.5 rounded-lg border ${
                     errors.email ? 'border-red-300' : 'border-gray-300'
                   } focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all`}
-                  placeholder="you@example.com"
+                  placeholder={t.auth.emailPlaceholder}
                 />
                 {errors.email && <p className="mt-1.5 text-sm text-red-600">{errors.email}</p>}
               </div>
@@ -121,13 +122,13 @@ export default function ResetPasswordPage() {
                 disabled={isLoading}
                 className="w-full py-2.5 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               >
-                {isLoading ? 'Sending...' : 'Send reset link'}
+                {isLoading ? t.auth.sending : t.auth.sendResetLink}
               </button>
             </form>
 
             <div className="mt-6 text-center">
               <Link href="/auth/login" className="text-sm font-medium text-blue-600 hover:text-blue-700">
-                Back to sign in
+                {t.auth.backToLogin}
               </Link>
             </div>
           </div>

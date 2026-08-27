@@ -105,13 +105,13 @@ export default function AnalyticsPage() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to analyze trends');
+        throw new Error(errorData.error || 'Tendensiya təhlili uğursuz oldu');
       }
 
       const data = await response.json();
       setTrendsAnalysis(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to analyze trends');
+      setError(err instanceof Error ? err.message : 'Tendensiya təhlili uğursuz oldu');
     } finally {
       setLoading(false);
     }
@@ -119,7 +119,7 @@ export default function AnalyticsPage() {
 
   const predictReorder = async () => {
     if (!selectedProductId) {
-      setError('Please select a product');
+      setError('Zəhmət olmasa məhsul seçin');
       return;
     }
 
@@ -128,6 +128,10 @@ export default function AnalyticsPage() {
       setError(null);
       setReorderPrediction(null);
 
+      // Create abort controller for timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+
       const response = await fetch('/api/ai/reorder', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -135,17 +139,24 @@ export default function AnalyticsPage() {
           productId: selectedProductId,
           warehouseId: selectedWarehouseId || undefined,
         }),
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to predict reorder');
+        throw new Error(errorData.error || 'Proqnozlaşdırma uğursuz oldu');
       }
 
       const data = await response.json();
       setReorderPrediction(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to predict reorder');
+      if (err instanceof Error && err.name === 'AbortError') {
+        setError('Sorğu vaxt bitdi. Zəhmət olmasa yenidən cəhd edin.');
+      } else {
+        setError(err instanceof Error ? err.message : 'Proqnozlaşdırma uğursuz oldu');
+      }
     } finally {
       setLoading(false);
     }

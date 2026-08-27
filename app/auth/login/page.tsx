@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Package } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { loginSchema, type LoginInput } from '@/lib/validations';
+import { t } from '@/lib/i18n';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -51,7 +52,7 @@ export default function LoginPage() {
       router.push('/dashboard');
       router.refresh();
     } catch (error) {
-      setMessage({ type: 'error', text: 'An unexpected error occurred' });
+      setMessage({ type: 'error', text: t.auth.unexpectedError });
     } finally {
       setIsLoading(false);
     }
@@ -66,7 +67,7 @@ export default function LoginPage() {
             <Link href="/" className="flex items-center space-x-2">
               <Package className="w-7 h-7 text-blue-600" />
               <span className="text-xl font-semibold tracking-tight text-gray-900">
-                Warehouse
+                {t.landing.warehouse}
               </span>
             </Link>
           </div>
@@ -79,9 +80,9 @@ export default function LoginPage() {
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold tracking-tight text-gray-900 mb-2">
-                Welcome back
+                {t.auth.welcomeBack}
               </h1>
-              <p className="text-gray-600">Sign in to your account to continue</p>
+              <p className="text-gray-600">{t.auth.signInToContinue}</p>
             </div>
 
             {message && (
@@ -99,7 +100,7 @@ export default function LoginPage() {
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Email address
+                  {t.auth.emailAddress}
                 </label>
                 <input
                   id="email"
@@ -110,14 +111,14 @@ export default function LoginPage() {
                   className={`w-full px-4 py-2.5 rounded-lg border ${
                     errors.email ? 'border-red-300' : 'border-gray-300'
                   } focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all`}
-                  placeholder="you@example.com"
+                  placeholder={t.auth.emailPlaceholder}
                 />
                 {errors.email && <p className="mt-1.5 text-sm text-red-600">{errors.email}</p>}
               </div>
 
               <div>
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Password
+                  {t.auth.password}
                 </label>
                 <input
                   id="password"
@@ -128,7 +129,7 @@ export default function LoginPage() {
                   className={`w-full px-4 py-2.5 rounded-lg border ${
                     errors.password ? 'border-red-300' : 'border-gray-300'
                   } focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all`}
-                  placeholder="••••••••"
+                  placeholder={t.auth.passwordPlaceholder}
                 />
                 {errors.password && <p className="mt-1.5 text-sm text-red-600">{errors.password}</p>}
               </div>
@@ -138,7 +139,7 @@ export default function LoginPage() {
                   href="/auth/reset-password"
                   className="text-sm font-medium text-blue-600 hover:text-blue-700"
                 >
-                  Forgot password?
+                  {t.auth.forgotPassword}
                 </Link>
               </div>
 
@@ -147,15 +148,15 @@ export default function LoginPage() {
                 disabled={isLoading}
                 className="w-full py-2.5 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               >
-                {isLoading ? 'Signing in...' : 'Sign in'}
+                {isLoading ? t.auth.signingIn : t.auth.signIn}
               </button>
             </form>
 
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">
-                Don't have an account?{' '}
+                {t.auth.dontHaveAccount}{' '}
                 <Link href="/auth/register" className="font-medium text-blue-600 hover:text-blue-700">
-                  Sign up
+                  {t.auth.signUp}
                 </Link>
               </p>
             </div>

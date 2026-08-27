@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { ArrowRight, BarChart3, Package, Shield, Zap } from 'lucide-react';
+import { t } from '@/lib/i18n';
 
 export default function Home() {
   return (
@@ -11,7 +12,7 @@ export default function Home() {
             <div className="flex items-center space-x-2">
               <Package className="w-7 h-7 text-blue-600" />
               <span className="text-xl font-semibold tracking-tight text-gray-900">
-                Warehouse
+                {t.landing.warehouse}
               </span>
             </div>
             <div className="flex items-center space-x-6">
@@ -19,13 +20,13 @@ export default function Home() {
                 href="/auth/login"
                 className="text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
               >
-                Sign in
+                {t.landing.signIn}
               </Link>
               <Link
                 href="/auth/register"
                 className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-all duration-200 hover:shadow-lg hover:shadow-blue-600/30"
               >
-                Get started
+                {t.landing.getStarted}
               </Link>
             </div>
           </div>
@@ -38,29 +39,29 @@ export default function Home() {
           <div className="text-center max-w-4xl mx-auto">
             <div className="inline-flex items-center space-x-2 bg-blue-50 text-blue-700 px-4 py-1.5 rounded-full text-sm font-medium mb-8">
               <Zap className="w-4 h-4" />
-              <span>Enterprise-grade inventory management</span>
+              <span>{t.landing.enterpriseGrade}</span>
             </div>
             <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold tracking-tight text-gray-900 mb-6 leading-[1.1]">
-              Manage inventory
+              {t.landing.manageInventory}
               <br />
-              <span className="text-blue-600">across warehouses</span>
+              <span className="text-blue-600">{t.landing.acrossWarehouses}</span>
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 mb-10 leading-relaxed max-w-3xl mx-auto">
-              The modern inventory management system built for scale. Track stock, manage orders, and optimize operations across multiple warehouses with real-time visibility.
+              {t.landing.heroDesc}
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
                 href="/auth/register"
                 className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl hover:shadow-blue-600/30 hover:-translate-y-0.5 group"
               >
-                Start free trial
+                {t.landing.startFreeTrial}
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
                 href="/auth/login"
                 className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-gray-700 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all duration-200"
               >
-                Sign in
+                {t.landing.signIn}
               </Link>
             </div>
           </div>
@@ -72,43 +73,43 @@ export default function Home() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 mb-4">
-              Everything you need to manage inventory
+              {t.landing.everythingYouNeed}
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Powerful features designed for enterprise operations
+              {t.landing.powerfulFeatures}
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <FeatureCard
               icon={<Package className="w-6 h-6" />}
-              title="Multi-warehouse support"
-              description="Manage inventory across unlimited warehouses with centralized control and real-time synchronization."
+              title={t.landing.multiWarehouseSupport}
+              description={t.landing.multiWarehouseDesc}
             />
             <FeatureCard
               icon={<BarChart3 className="w-6 h-6" />}
-              title="Real-time analytics"
-              description="Get instant insights into stock levels, order trends, and warehouse performance with live dashboards."
+              title={t.landing.realTimeAnalytics}
+              description={t.landing.realTimeAnalyticsDesc}
             />
             <FeatureCard
               icon={<Shield className="w-6 h-6" />}
-              title="Role-based access"
-              description="Secure access control with granular permissions for admins, managers, and staff members."
+              title={t.landing.roleBasedAccess}
+              description={t.landing.roleBasedAccessDesc}
             />
             <FeatureCard
               icon={<Zap className="w-6 h-6" />}
-              title="Automated workflows"
-              description="Streamline operations with automated reordering, low-stock alerts, and fulfillment processes."
+              title={t.landing.automatedWorkflows}
+              description={t.landing.automatedWorkflowsDesc}
             />
             <FeatureCard
               icon={<Package className="w-6 h-6" />}
-              title="Product management"
-              description="Comprehensive product catalog with variants, categories, and detailed inventory tracking."
+              title={t.landing.productManagement}
+              description={t.landing.productManagementDesc}
             />
             <FeatureCard
               icon={<BarChart3 className="w-6 h-6" />}
-              title="Export & reporting"
-              description="Generate detailed reports and export data in multiple formats for analysis and compliance."
+              title={t.landing.exportReporting}
+              description={t.landing.exportReportingDesc}
             />
           </div>
         </div>
@@ -118,16 +119,16 @@ export default function Home() {
       <section className="py-24 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 mb-6">
-            Ready to optimize your inventory?
+            {t.landing.readyToOptimize}
           </h2>
           <p className="text-xl text-gray-600 mb-10">
-            Join leading businesses managing their warehouses with our platform
+            {t.landing.joinLeadingBusinesses}
           </p>
           <Link
             href="/auth/register"
             className="inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl hover:shadow-blue-600/30 hover:-translate-y-0.5 group"
           >
-            Get started for free
+            {t.landing.getStartedFree}
             <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
@@ -139,10 +140,10 @@ export default function Home() {
           <div className="flex flex-col md:flex-row items-center justify-between">
             <div className="flex items-center space-x-2 mb-4 md:mb-0">
               <Package className="w-6 h-6 text-blue-600" />
-              <span className="text-lg font-semibold text-gray-900">Warehouse</span>
+              <span className="text-lg font-semibold text-gray-900">{t.landing.warehouse}</span>
             </div>
             <p className="text-sm text-gray-600">
-              © {new Date().getFullYear()} Warehouse Inventory System. All rights reserved.
+              © {new Date().getFullYear()} {t.landing.warehouse}. {t.landing.allRightsReserved}
             </p>
           </div>
         </div>

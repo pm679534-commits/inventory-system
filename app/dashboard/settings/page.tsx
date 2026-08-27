@@ -174,6 +174,8 @@ export default function SettingsPage() {
     // Apply theme immediately when changed
     if (field === 'theme') {
       applyTheme(value);
+      // Dispatch custom event to notify ThemeProvider
+      window.dispatchEvent(new CustomEvent('theme-changed', { detail: value }));
     }
   };
 
@@ -184,6 +186,8 @@ export default function SettingsPage() {
     } else {
       document.documentElement.classList.toggle('dark', theme === 'dark');
     }
+    // Store in localStorage for immediate sync
+    localStorage.setItem('theme-preference', theme);
   };
 
   if (loading) {

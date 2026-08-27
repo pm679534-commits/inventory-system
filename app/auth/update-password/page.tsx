@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Package } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { updatePasswordSchema, type UpdatePasswordInput } from '@/lib/validations';
+import { t } from '@/lib/i18n';
 
 export default function UpdatePasswordPage() {
   const router = useRouter();
@@ -59,14 +60,14 @@ export default function UpdatePasswordPage() {
 
       setMessage({
         type: 'success',
-        text: 'Password updated successfully! Redirecting...',
+        text: t.auth.passwordUpdated,
       });
 
       setTimeout(() => {
         router.push('/dashboard');
       }, 2000);
     } catch (error) {
-      setMessage({ type: 'error', text: 'An unexpected error occurred' });
+      setMessage({ type: 'error', text: t.auth.unexpectedError });
     } finally {
       setIsLoading(false);
     }
@@ -76,9 +77,9 @@ export default function UpdatePasswordPage() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
         <div className="text-center">
-          <p className="text-gray-600 mb-4">Invalid or expired reset link.</p>
+          <p className="text-gray-600 mb-4">{t.errors.unauthorized}</p>
           <Link href="/auth/reset-password" className="text-blue-600 hover:text-blue-700 font-medium">
-            Request a new password reset link
+            {t.auth.resetPassword}
           </Link>
         </div>
       </div>
@@ -94,7 +95,7 @@ export default function UpdatePasswordPage() {
             <Link href="/" className="flex items-center space-x-2">
               <Package className="w-7 h-7 text-blue-600" />
               <span className="text-xl font-semibold tracking-tight text-gray-900">
-                Warehouse
+                {t.landing.warehouse}
               </span>
             </Link>
           </div>
@@ -107,9 +108,9 @@ export default function UpdatePasswordPage() {
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold tracking-tight text-gray-900 mb-2">
-                Update your password
+                {t.auth.updatePasswordTitle}
               </h1>
-              <p className="text-gray-600">Enter your new password below</p>
+              <p className="text-gray-600">{t.auth.updatePasswordDesc}</p>
             </div>
 
             {message && (
@@ -127,7 +128,7 @@ export default function UpdatePasswordPage() {
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1.5">
-                  New password
+                  {t.auth.newPassword}
                 </label>
                 <input
                   id="password"
@@ -138,14 +139,14 @@ export default function UpdatePasswordPage() {
                   className={`w-full px-4 py-2.5 rounded-lg border ${
                     errors.password ? 'border-red-300' : 'border-gray-300'
                   } focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all`}
-                  placeholder="••••••••"
+                  placeholder={t.auth.passwordPlaceholder}
                 />
                 {errors.password && <p className="mt-1.5 text-sm text-red-600">{errors.password}</p>}
               </div>
 
               <div>
                 <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Confirm new password
+                  {t.auth.confirmNewPassword}
                 </label>
                 <input
                   id="confirmPassword"
@@ -156,7 +157,7 @@ export default function UpdatePasswordPage() {
                   className={`w-full px-4 py-2.5 rounded-lg border ${
                     errors.confirmPassword ? 'border-red-300' : 'border-gray-300'
                   } focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all`}
-                  placeholder="••••••••"
+                  placeholder={t.auth.passwordPlaceholder}
                 />
                 {errors.confirmPassword && (
                   <p className="mt-1.5 text-sm text-red-600">{errors.confirmPassword}</p>
@@ -168,7 +169,7 @@ export default function UpdatePasswordPage() {
                 disabled={isLoading}
                 className="w-full py-2.5 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
               >
-                {isLoading ? 'Updating...' : 'Update password'}
+                {isLoading ? t.auth.updating : t.auth.updatePassword}
               </button>
             </form>
           </div>

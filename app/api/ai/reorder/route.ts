@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
     // Check if API key is configured
     if (!validateAPIKey()) {
       return NextResponse.json(
-        { error: 'AI service not configured' },
+        { error: 'AI xidməti konfiqurasiya olunmayıb' },
         { status: 503 }
       );
     }
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
 
     if (!rateCheck.allowed) {
       return NextResponse.json(
-        { error: 'Too many AI requests. Please try again later.' },
+        { error: 'Çox sayda AI sorğusu. Zəhmət olmasa bir az sonra yenidən cəhd edin.' },
         {
           status: 429,
           headers: getRateLimitHeaders(30, rateCheck.remaining, rateCheck.resetAt),
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'İcazəsiz giriş' }, { status: 401 });
     }
 
     // All authenticated users can access AI analytics
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (!profile) {
-      return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Profil tapılmadı' }, { status: 404 });
     }
 
     // Parse and validate request
@@ -57,8 +57,17 @@ export async function POST(request: NextRequest) {
     const validation = aiPredictReorderSchema.safeParse(body);
 
     if (!validation.success) {
+      const firstError = validation.error.issues[0];
+      let errorMessage = 'Yanlış sorğu';
+
+      if (firstError.path.includes('productId')) {
+        errorMessage = 'Məhsul seçilməlidir';
+      } else if (firstError.path.includes('warehouseId')) {
+        errorMessage = 'Anbar seçimi yanlışdır';
+      }
+
       return NextResponse.json(
-        { error: 'Invalid request', details: validation.error.issues },
+        { error: errorMessage, details: validation.error.issues },
         { status: 400 }
       );
     }
@@ -74,7 +83,7 @@ export async function POST(request: NextRequest) {
 
     if (productError || !product) {
       return NextResponse.json(
-        { error: 'Product not found' },
+        { error: 'Məhsul tapılmadı' },
         { status: 404 }
       );
     }
@@ -94,7 +103,7 @@ export async function POST(request: NextRequest) {
     if (stockError) {
       console.error('Error fetching stock:', stockError);
       return NextResponse.json(
-        { error: 'Failed to fetch stock data' },
+        { error: 'Stok məlumatlarının əldə edilməsi uğursuz oldu' },
         { status: 500 }
       );
     }
@@ -117,7 +126,7 @@ export async function POST(request: NextRequest) {
     if (orderItemsError) {
       console.error('Error fetching order items:', orderItemsError);
       return NextResponse.json(
-        { error: 'Failed to fetch sales data' },
+        { error: 'Satış məlumatlarının əldə edilməsi uğursuz oldu' },
         { status: 500 }
       );
     }
@@ -152,7 +161,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('AI reorder prediction error:', error);
     return NextResponse.json(
-      { error: 'Prediction failed. Please try again.' },
+      { error: 'Proqnoz uğursuz oldu. Zəhmət olmasa yenidən cəhd edin.' },
       { status: 500 }
     );
   }
