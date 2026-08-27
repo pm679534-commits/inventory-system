@@ -54,6 +54,7 @@ export async function POST(request: NextRequest) {
 
     // Parse and validate request
     const body = await request.json();
+
     const validation = aiPredictReorderSchema.safeParse(body);
 
     if (!validation.success) {
@@ -67,7 +68,7 @@ export async function POST(request: NextRequest) {
       }
 
       return NextResponse.json(
-        { error: errorMessage, details: validation.error.issues },
+        { error: errorMessage },
         { status: 400 }
       );
     }

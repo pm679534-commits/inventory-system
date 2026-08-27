@@ -128,6 +128,16 @@ export default function AnalyticsPage() {
       setError(null);
       setReorderPrediction(null);
 
+      // Prepare payload
+      const payload: any = {
+        productId: selectedProductId,
+      };
+
+      // Only include warehouseId if it's not empty
+      if (selectedWarehouseId && selectedWarehouseId.trim() !== '') {
+        payload.warehouseId = selectedWarehouseId;
+      }
+
       // Create abort controller for timeout
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
@@ -135,10 +145,7 @@ export default function AnalyticsPage() {
       const response = await fetch('/api/ai/reorder', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          productId: selectedProductId,
-          warehouseId: selectedWarehouseId || undefined,
-        }),
+        body: JSON.stringify(payload),
         signal: controller.signal,
       });
 
@@ -146,10 +153,17 @@ export default function AnalyticsPage() {
 
       if (!response.ok) {
         const errorData = await response.json();
+        console.log('=== API ERROR RESPONSE ===');
+        console.log('Status:', response.status);
+        console.log('Error data:', errorData);
+        console.log('=========================');
         throw new Error(errorData.error || 'Proqnozlaşdırma uğursuz oldu');
       }
 
       const data = await response.json();
+      console.log('=== API SUCCESS ===');
+      console.log('Response data:', data);
+      console.log('==================');
       setReorderPrediction(data);
     } catch (err) {
       if (err instanceof Error && err.name === 'AbortError') {
