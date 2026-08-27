@@ -137,7 +137,7 @@ export async function POST(request: NextRequest) {
           total_available: totalAvailable,
           status: product.status,
         };
-      }).filter(Boolean);
+      }).filter((item): item is NonNullable<typeof item> => item !== null);
 
       recordCount += exportData.length;
       csvContent += generateProductsCSV(exportData);
