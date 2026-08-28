@@ -29,7 +29,7 @@ export async function GET() {
       cacheKey,
       async () => {
         // Fetch all stats in parallel for better performance
-        const [productsResult, warehousesResult, activeOrdersResult, deliveredOrdersResult] =
+        const [productsResult, warehousesResult, activeOrdersResult, revenueResult] =
           await Promise.all([
             supabase.from('products').select('*', { count: 'exact', head: true }),
             supabase.from('warehouses').select('*', { count: 'exact', head: true }),
@@ -37,11 +37,10 @@ export async function GET() {
               .from('orders')
               .select('*', { count: 'exact', head: true })
               .in('status', ['pending', 'processing', 'shipped']),
-            supabase.from('orders').select('total_amount').eq('status', 'delivered'),
+            supabase.rpc('calculate_total_revenue'),
           ]);
 
-        const totalRevenue =
-          deliveredOrdersResult.data?.reduce((sum, order) => sum + (order.total_amount || 0), 0) || 0;
+        const totalRevenue = revenueResult.data || 0;
 
         return {
           productsCount: productsResult.count || 0,
