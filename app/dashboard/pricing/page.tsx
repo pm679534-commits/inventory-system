@@ -1,12 +1,34 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { Check, X, Sparkles, Zap, Building2, Crown } from 'lucide-react';
 
 export default function PricingPage() {
+  const [currentPlan, setCurrentPlan] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCurrentPlan = async () => {
+      try {
+        const response = await fetch('/api/profile');
+        if (response.ok) {
+          const profile = await response.json();
+          setCurrentPlan(profile.current_plan || null);
+        }
+      } catch (error) {
+        console.error('Failed to fetch current plan:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCurrentPlan();
+  }, []);
   const plans = [
     {
       name: 'Starter',
       nameAz: 'Başlanğıc',
+      slug: 'starter',
       price: '$49',
       period: '/ay',
       description: 'Kiçik bizneslər və startaplar üçün',
@@ -27,6 +49,7 @@ export default function PricingPage() {
     {
       name: 'Professional',
       nameAz: 'Professional',
+      slug: 'professional',
       price: '$149',
       period: '/ay',
       description: 'Böyüyən şirkətlər üçün',
@@ -48,6 +71,7 @@ export default function PricingPage() {
     {
       name: 'Enterprise',
       nameAz: 'Korporativ',
+      slug: 'enterprise',
       price: 'Fərdi',
       period: '',
       description: 'Böyük təşkilatlar üçün',
@@ -109,6 +133,7 @@ export default function PricingPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-12 sm:mb-16">
         {plans.map((plan) => {
           const colors = colorClasses[plan.color as keyof typeof colorClasses];
+          const isCurrentPlan = !loading && currentPlan === plan.slug;
           return (
             <div
               key={plan.name}
@@ -119,6 +144,12 @@ export default function PricingPage() {
               {plan.popular && (
                 <div className={`absolute -top-4 left-1/2 -translate-x-1/2 ${colors.bg} ${colors.text} px-4 py-1 rounded-full text-sm font-semibold border-2 ${colors.border}`}>
                   Ən populyar
+                </div>
+              )}
+
+              {isCurrentPlan && (
+                <div className="absolute -top-4 right-4 bg-green-500 text-white px-4 py-1 rounded-full text-sm font-semibold">
+                  Cari planınız
                 </div>
               )}
 
@@ -149,9 +180,19 @@ export default function PricingPage() {
 
               {/* CTA Button */}
               <button
-                className={`w-full py-3 px-6 rounded-lg font-semibold transition-all mb-8 ${colors.button}`}
+                className={`w-full py-3 px-6 rounded-lg font-semibold transition-all mb-8 ${
+                  isCurrentPlan
+                    ? 'bg-gray-300 dark:bg-gray-700 text-gray-600 dark:text-gray-400 cursor-not-allowed'
+                    : colors.button
+                }`}
+                disabled={isCurrentPlan}
               >
-                {plan.price === 'Fərdi' ? 'Bizimlə əlaqə saxlayın' : 'Başlayın'}
+                {isCurrentPlan
+                  ? 'Aktiv plan'
+                  : plan.price === 'Fərdi'
+                    ? 'Bizimlə əlaqə saxlayın'
+                    : 'Başlayın'
+                }
               </button>
 
               {/* Features */}

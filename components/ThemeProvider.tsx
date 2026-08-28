@@ -4,6 +4,23 @@ import { useEffect } from 'react';
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
+    // Apply theme immediately on mount
+    const applyTheme = (theme: 'light' | 'dark' | 'auto') => {
+      if (theme === 'auto') {
+        const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (isDark) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      } else if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+      localStorage.setItem('theme-preference', theme);
+    };
+
     // Load theme preference from settings on initial mount
     const loadTheme = async () => {
       try {
@@ -12,13 +29,23 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
           const settings = await response.json();
           const theme = settings.theme || 'light';
           applyTheme(theme);
+        } else {
+          // Fallback to light theme if API fails
+          applyTheme('light');
         }
       } catch (err) {
         console.error('Failed to load theme:', err);
+        // Fallback to light theme
+        applyTheme('light');
       }
     };
 
     loadTheme();
+
+    // Listen for theme changes from settings page
+    const handleThemeChange = (e: CustomEvent) => {
+      applyTheme(e.detail);
+    };
 
     // Listen for storage events to sync theme across tabs
     const handleStorageChange = (e: StorageEvent) => {
@@ -30,21 +57,14 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       }
     };
 
+    window.addEventListener('theme-changed', handleThemeChange as EventListener);
     window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, []);
 
-  const applyTheme = (theme: 'light' | 'dark' | 'auto') => {
-    if (theme === 'auto') {
-      // Use system preference
-      const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      document.documentElement.classList.toggle('dark', isDark);
-    } else {
-      document.documentElement.classList.toggle('dark', theme === 'dark');
-    }
-    // Store theme preference in localStorage for cross-tab sync
-    localStorage.setItem('theme-preference', theme);
-  };
+    return () => {
+      window.removeEventListener('theme-changed', handleThemeChange as EventListener);
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
 
   return <>{children}</>;
 }
