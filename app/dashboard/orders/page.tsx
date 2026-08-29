@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { ShoppingCart, Plus, Filter, Package } from 'lucide-react';
+import { t } from '@/lib/i18n';
 
 interface Order {
   id: string;
@@ -111,13 +112,13 @@ export default function OrdersPage() {
       if (warehouseFilter) params.append('warehouseId', warehouseFilter);
 
       const response = await fetch(`/api/orders?${params}`);
-      if (!response.ok) throw new Error('Failed to fetch orders');
+      if (!response.ok) throw new Error(t.orders.failedToFetchOrders);
 
       const data = await response.json();
       setOrders(data.orders || []);
       setTotal(data.total || 0);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load orders');
+      setError(err instanceof Error ? err.message : t.orders.failedToFetchOrders);
     } finally {
       setLoading(false);
     }
@@ -163,22 +164,22 @@ export default function OrdersPage() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to create order');
+        throw new Error(errorData.error || t.orders.failedToCreateOrder);
       }
 
       setShowModal(false);
       resetForm();
       fetchOrders();
-      alert('Order created successfully!');
+      alert(t.orders.orderCreatedSuccess);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create order');
+      setError(err instanceof Error ? err.message : t.orders.failedToCreateOrder);
     } finally {
       setSubmitting(false);
     }
   };
 
   const handleStatusChange = async (orderId: string, newStatus: string) => {
-    if (!confirm(`Change order status to ${newStatus}?`)) return;
+    if (!confirm(`${t.orders.changeStatusConfirm} ${newStatus}?`)) return;
 
     try {
       const response = await fetch(`/api/orders/${orderId}`, {
@@ -189,7 +190,7 @@ export default function OrdersPage() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to update order status');
+        throw new Error(errorData.error || t.orders.failedToUpdateStatus);
       }
 
       fetchOrders();
@@ -197,7 +198,7 @@ export default function OrdersPage() {
         setSelectedOrder({ ...selectedOrder, status: newStatus as any });
       }
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Failed to update order status');
+      alert(err instanceof Error ? err.message : t.orders.failedToUpdateStatus);
     }
   };
 
@@ -287,15 +288,15 @@ export default function OrdersPage() {
     <div className="max-w-7xl mx-auto">
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-50 mb-2">Orders</h1>
-          <p className="text-gray-600 dark:text-gray-400">Track and manage your orders</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-50 mb-2">{t.orders.title}</h1>
+          <p className="text-gray-600 dark:text-gray-400">{t.orders.subtitle}</p>
         </div>
         <button
           onClick={openCreateModal}
           className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
         >
           <Plus className="w-5 h-5" />
-          Create Order
+          {t.orders.createOrder}
         </button>
       </div>
 
@@ -310,12 +311,12 @@ export default function OrdersPage() {
             }}
             className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-gray-100"
           >
-            <option value="">All Statuses</option>
-            <option value="pending">Pending</option>
-            <option value="processing">Processing</option>
-            <option value="shipped">Shipped</option>
-            <option value="delivered">Delivered</option>
-            <option value="cancelled">Cancelled</option>
+            <option value="">{t.orders.allStatuses}</option>
+            <option value="pending">{t.orders.pending}</option>
+            <option value="processing">{t.orders.processing}</option>
+            <option value="shipped">{t.orders.shipped}</option>
+            <option value="delivered">{t.orders.delivered}</option>
+            <option value="cancelled">{t.orders.cancelled}</option>
           </select>
 
           <select
@@ -326,7 +327,7 @@ export default function OrdersPage() {
             }}
             className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-gray-100"
           >
-            <option value="">All Warehouses</option>
+            <option value="">{t.orders.allWarehouses}</option>
             {warehouses.map((wh) => (
               <option key={wh.id} value={wh.id}>
                 {wh.name}
@@ -347,18 +348,18 @@ export default function OrdersPage() {
         {loading ? (
           <div className="p-12 text-center">
             <div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-            <p className="mt-4 text-gray-600 dark:text-gray-400">Loading orders...</p>
+            <p className="mt-4 text-gray-600 dark:text-gray-400">{t.orders.loadingOrders}</p>
           </div>
         ) : orders.length === 0 ? (
           <div className="p-12 text-center">
             <ShoppingCart className="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">No orders found</h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-4">Create your first order to get started</p>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{t.orders.noOrders}</h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-4">{t.orders.createFirstOrder}</p>
             <button
               onClick={openCreateModal}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
             >
-              Create Order
+              {t.orders.createOrder}
             </button>
           </div>
         ) : (
@@ -368,25 +369,25 @@ export default function OrdersPage() {
                 <thead className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Order Number
+                      {t.orders.orderNumber}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Customer
+                      {t.orders.customer}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Warehouse
+                      {t.orders.warehouse}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Amount
+                      {t.orders.amount}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Status
+                      {t.orders.status}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Date
+                      {t.orders.date}
                     </th>
                     <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Actions
+                      {t.orders.actions}
                     </th>
                   </tr>
                 </thead>
@@ -418,7 +419,7 @@ export default function OrdersPage() {
                             order.status
                           )}`}
                         >
-                          {order.status}
+                          {t.orders[order.status]}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -431,7 +432,7 @@ export default function OrdersPage() {
                           onClick={() => viewOrderDetails(order)}
                           className="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 mr-3"
                         >
-                          View
+                          {t.orders.view}
                         </button>
                         {order.status !== 'delivered' && order.status !== 'cancelled' && (
                           <select
@@ -440,11 +441,11 @@ export default function OrdersPage() {
                             className="text-sm border border-gray-300 dark:border-gray-600 rounded px-2 py-1 dark:bg-gray-900 dark:text-gray-100"
                             onClick={(e) => e.stopPropagation()}
                           >
-                            <option value="pending">Pending</option>
-                            <option value="processing">Processing</option>
-                            <option value="shipped">Shipped</option>
-                            <option value="delivered">Delivered</option>
-                            <option value="cancelled">Cancelled</option>
+                            <option value="pending">{t.orders.pending}</option>
+                            <option value="processing">{t.orders.processing}</option>
+                            <option value="shipped">{t.orders.shipped}</option>
+                            <option value="delivered">{t.orders.delivered}</option>
+                            <option value="cancelled">{t.orders.cancelled}</option>
                           </select>
                         )}
                       </td>
@@ -458,8 +459,8 @@ export default function OrdersPage() {
             {totalPages > 1 && (
               <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
                 <div className="text-sm text-gray-700 dark:text-gray-300">
-                  Showing {(page - 1) * limit + 1} to {Math.min(page * limit, total)} of {total}{' '}
-                  orders
+                  {t.orders.showing} {(page - 1) * limit + 1} {t.orders.to} {Math.min(page * limit, total)} {t.orders.of} {total}{' '}
+                  {t.orders.orders}
                 </div>
                 <div className="flex gap-2">
                   <button
@@ -467,17 +468,17 @@ export default function OrdersPage() {
                     disabled={page === 1}
                     className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-300"
                   >
-                    Previous
+                    {t.orders.previous}
                   </button>
                   <span className="px-3 py-1 dark:text-gray-300">
-                    Page {page} of {totalPages}
+                    {t.orders.page} {page} {t.orders.of} {totalPages}
                   </span>
                   <button
                     onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                     disabled={page === totalPages}
                     className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-300"
                   >
-                    Next
+                    {t.orders.next}
                   </button>
                 </div>
               </div>
@@ -490,50 +491,50 @@ export default function OrdersPage() {
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white dark:bg-gray-800 rounded-lg max-w-3xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200">
-              <h2 className="text-2xl font-bold text-gray-900">Create Order</h2>
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t.orders.createOrder}</h2>
             </div>
 
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Customer Name <span className="text-red-500">*</span>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    {t.orders.customerName} <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     required
                     value={formData.customer_name}
                     onChange={(e) => setFormData({ ...formData, customer_name: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-gray-100"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Customer Email <span className="text-red-500">*</span>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    {t.orders.customerEmail} <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="email"
                     required
                     value={formData.customer_email}
                     onChange={(e) => setFormData({ ...formData, customer_email: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-gray-100"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Warehouse <span className="text-red-500">*</span>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  {t.orders.warehouse} <span className="text-red-500">*</span>
                 </label>
                 <select
                   required
                   value={formData.warehouse_id}
                   onChange={(e) => setFormData({ ...formData, warehouse_id: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-gray-100"
                 >
-                  <option value="">Select warehouse</option>
+                  <option value="">{t.orders.selectWarehouse}</option>
                   {warehouses.map((wh) => (
                     <option key={wh.id} value={wh.id}>
                       {wh.name}
@@ -543,21 +544,21 @@ export default function OrdersPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.orders.notes}</label>
                 <textarea
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                   rows={2}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
-                  placeholder="Order notes"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-gray-100"
+                  placeholder={t.orders.orderNotes}
                 />
               </div>
 
               {/* Order Items */}
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Order Items <span className="text-red-500">*</span>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    {t.orders.orderItems} <span className="text-red-500">*</span>
                   </label>
                   <button
                     type="button"
@@ -565,15 +566,15 @@ export default function OrdersPage() {
                     disabled={!formData.warehouse_id}
                     className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    + Add Item
+                    + {t.orders.addItem}
                   </button>
                 </div>
 
                 {formData.items.length === 0 ? (
                   <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center">
                     <Package className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-2" />
-                    <p className="text-gray-600">No items added yet</p>
-                    <p className="text-sm text-gray-500">Select a warehouse first, then add items</p>
+                    <p className="text-gray-600 dark:text-gray-400">{t.orders.noItems}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{t.orders.selectWarehouseFirst}</p>
                   </div>
                 ) : (
                   <div className="space-y-3">
@@ -582,16 +583,16 @@ export default function OrdersPage() {
                         ? getAvailableStock(item.product_id, formData.warehouse_id)
                         : 0;
                       return (
-                        <div key={index} className="border border-gray-200 rounded-lg p-3">
+                        <div key={index} className="border border-gray-200 dark:border-gray-700 rounded-lg p-3">
                           <div className="grid grid-cols-12 gap-2">
                             <div className="col-span-5">
                               <select
                                 required
                                 value={item.product_id}
                                 onChange={(e) => updateItem(index, 'product_id', e.target.value)}
-                                className="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-gray-100"
                               >
-                                <option value="">Select product</option>
+                                <option value="">{t.orders.selectProduct}</option>
                                 {products.map((product) => (
                                   <option key={product.id} value={product.id}>
                                     {product.name} ({product.sku})
@@ -599,8 +600,8 @@ export default function OrdersPage() {
                                 ))}
                               </select>
                               {item.product_id && (
-                                <p className="text-xs text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">
-                                  Available: {availableStock} units
+                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                  {t.orders.available}: {availableStock} {t.orders.units}
                                 </p>
                               )}
                             </div>
@@ -614,8 +615,8 @@ export default function OrdersPage() {
                                 onChange={(e) =>
                                   updateItem(index, 'quantity', parseInt(e.target.value))
                                 }
-                                className="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-blue-500"
-                                placeholder="Qty"
+                                className="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-gray-100"
+                                placeholder={t.orders.qty}
                               />
                             </div>
                             <div className="col-span-2">
@@ -628,12 +629,12 @@ export default function OrdersPage() {
                                 onChange={(e) =>
                                   updateItem(index, 'unit_price', parseFloat(e.target.value))
                                 }
-                                className="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-blue-500"
-                                placeholder="Price"
+                                className="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-gray-100"
+                                placeholder={t.orders.price}
                               />
                             </div>
                             <div className="col-span-2 flex items-center">
-                              <span className="text-sm font-medium">
+                              <span className="text-sm font-medium dark:text-gray-100">
                                 ${(item.quantity * item.unit_price).toFixed(2)}
                               </span>
                             </div>
@@ -656,15 +657,15 @@ export default function OrdersPage() {
 
               {formData.items.length > 0 && (
                 <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
-                  <div className="flex items-center justify-between text-lg font-bold">
-                    <span>Total:</span>
+                  <div className="flex items-center justify-between text-lg font-bold dark:text-gray-100">
+                    <span>{t.orders.total}:</span>
                     <span>${calculateTotal().toFixed(2)}</span>
                   </div>
                 </div>
               )}
 
               {error && (
-                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 text-red-700 dark:text-red-400 px-4 py-3 rounded-lg">
                   {error}
                 </div>
               )}
@@ -676,16 +677,16 @@ export default function OrdersPage() {
                     setShowModal(false);
                     setError(null);
                   }}
-                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 rounded-lg hover:bg-gray-50"
+                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
                 >
-                  Cancel
+                  {t.orders.cancel}
                 </button>
                 <button
                   type="submit"
                   disabled={submitting || formData.items.length === 0}
                   className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {submitting ? 'Creating...' : 'Create Order'}
+                  {submitting ? t.orders.creating : t.orders.createOrder}
                 </button>
               </div>
             </form>
@@ -697,35 +698,35 @@ export default function OrdersPage() {
       {showDetailsModal && selectedOrder && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white dark:bg-gray-800 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200">
-              <h2 className="text-2xl font-bold text-gray-900">Order Details</h2>
-              <p className="text-gray-600">{selectedOrder.order_number}</p>
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{t.orders.orderDetails}</h2>
+              <p className="text-gray-600 dark:text-gray-400">{selectedOrder.order_number}</p>
             </div>
 
             <div className="p-6 space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-gray-600">Customer</p>
-                  <p className="font-medium">{selectedOrder.customer_name}</p>
-                  <p className="text-sm text-gray-600">{selectedOrder.customer_email}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">{t.orders.customer}</p>
+                  <p className="font-medium dark:text-gray-100">{selectedOrder.customer_name}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">{selectedOrder.customer_email}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Warehouse</p>
-                  <p className="font-medium">{selectedOrder.warehouse?.name || '-'}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">{t.orders.warehouse}</p>
+                  <p className="font-medium dark:text-gray-100">{selectedOrder.warehouse?.name || '-'}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Status</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">{t.orders.status}</p>
                   <span
                     className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getStatusColor(
                       selectedOrder.status
                     )}`}
                   >
-                    {selectedOrder.status}
+                    {t.orders[selectedOrder.status]}
                   </span>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Date</p>
-                  <p className="font-medium">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">{t.orders.date}</p>
+                  <p className="font-medium dark:text-gray-100">
                     {new Date(selectedOrder.created_at).toLocaleString()}
                   </p>
                 </div>
@@ -733,46 +734,46 @@ export default function OrdersPage() {
 
               {selectedOrder.notes && (
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Notes</p>
-                  <p className="text-sm">{selectedOrder.notes}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t.orders.notes}</p>
+                  <p className="text-sm dark:text-gray-100">{selectedOrder.notes}</p>
                 </div>
               )}
 
               <div>
-                <p className="text-sm font-medium text-gray-700 mb-2">Order Items</p>
-                <div className="border border-gray-200 rounded-lg overflow-hidden">
+                <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{t.orders.orderItems}</p>
+                <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
                   <table className="w-full text-sm">
-                    <thead className="bg-gray-50">
+                    <thead className="bg-gray-50 dark:bg-gray-900">
                       <tr>
-                        <th className="px-4 py-2 text-left">Product</th>
-                        <th className="px-4 py-2 text-right">Qty</th>
-                        <th className="px-4 py-2 text-right">Price</th>
-                        <th className="px-4 py-2 text-right">Total</th>
+                        <th className="px-4 py-2 text-left dark:text-gray-300">{t.orders.product}</th>
+                        <th className="px-4 py-2 text-right dark:text-gray-300">{t.orders.qty}</th>
+                        <th className="px-4 py-2 text-right dark:text-gray-300">{t.orders.price}</th>
+                        <th className="px-4 py-2 text-right dark:text-gray-300">{t.orders.total}</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-200">
+                    <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                       {selectedOrder.order_items?.map((item) => (
                         <tr key={item.id}>
                           <td className="px-4 py-2">
-                            <div className="font-medium">{item.product?.name}</div>
-                            <div className="text-xs text-gray-500">{item.product?.sku}</div>
+                            <div className="font-medium dark:text-gray-100">{item.product?.name}</div>
+                            <div className="text-xs text-gray-500 dark:text-gray-400">{item.product?.sku}</div>
                           </td>
-                          <td className="px-4 py-2 text-right">
+                          <td className="px-4 py-2 text-right dark:text-gray-100">
                             {item.quantity} {item.product?.unit}
                           </td>
-                          <td className="px-4 py-2 text-right">${item.unit_price.toFixed(2)}</td>
-                          <td className="px-4 py-2 text-right font-medium">
+                          <td className="px-4 py-2 text-right dark:text-gray-100">${item.unit_price.toFixed(2)}</td>
+                          <td className="px-4 py-2 text-right font-medium dark:text-gray-100">
                             ${item.total_price.toFixed(2)}
                           </td>
                         </tr>
                       ))}
                     </tbody>
-                    <tfoot className="bg-gray-50">
+                    <tfoot className="bg-gray-50 dark:bg-gray-900">
                       <tr>
-                        <td colSpan={3} className="px-4 py-2 text-right font-bold">
-                          Total:
+                        <td colSpan={3} className="px-4 py-2 text-right font-bold dark:text-gray-100">
+                          {t.orders.total}:
                         </td>
-                        <td className="px-4 py-2 text-right font-bold">
+                        <td className="px-4 py-2 text-right font-bold dark:text-gray-100">
                           ${selectedOrder.total_amount.toFixed(2)}
                         </td>
                       </tr>
@@ -782,12 +783,12 @@ export default function OrdersPage() {
               </div>
             </div>
 
-            <div className="p-6 border-t border-gray-200">
+            <div className="p-6 border-t border-gray-200 dark:border-gray-700">
               <button
                 onClick={() => setShowDetailsModal(false)}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 rounded-lg hover:bg-gray-50"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
               >
-                Close
+                {t.orders.close}
               </button>
             </div>
           </div>

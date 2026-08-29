@@ -1,10 +1,14 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
-    // Apply theme immediately on mount
+    setMounted(true);
+
+    // Apply cached theme immediately from localStorage (already applied by inline script)
     const applyTheme = (theme: 'light' | 'dark' | 'auto') => {
       if (theme === 'auto') {
         const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -18,33 +22,36 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       } else {
         document.documentElement.classList.remove('dark');
       }
-      localStorage.setItem('theme-preference', theme);
     };
 
-    // Load theme preference from settings on initial mount
-    const loadTheme = async () => {
+    // Sync theme with server settings in background (non-blocking)
+    const syncThemeFromServer = async () => {
       try {
         const response = await fetch('/api/settings');
         if (response.ok) {
           const settings = await response.json();
-          const theme = settings.theme || 'light';
-          applyTheme(theme);
-        } else {
-          // Fallback to light theme if API fails
-          applyTheme('light');
+          const serverTheme = settings.theme || 'light';
+          const cachedTheme = localStorage.getItem('theme-preference');
+
+          // Only update if server theme differs from cached
+          if (serverTheme !== cachedTheme) {
+            localStorage.setItem('theme-preference', serverTheme);
+            applyTheme(serverTheme);
+          }
         }
       } catch (err) {
-        console.error('Failed to load theme:', err);
-        // Fallback to light theme
-        applyTheme('light');
+        // Silently fail - cached theme already applied
+        console.error('Theme sync failed:', err);
       }
     };
 
-    loadTheme();
+    syncThemeFromServer();
 
     // Listen for theme changes from settings page
     const handleThemeChange = (e: CustomEvent) => {
-      applyTheme(e.detail);
+      const theme = e.detail;
+      localStorage.setItem('theme-preference', theme);
+      applyTheme(theme);
     };
 
     // Listen for storage events to sync theme across tabs

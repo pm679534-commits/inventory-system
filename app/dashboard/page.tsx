@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { Package, Warehouse, ShoppingCart, TrendingUp } from 'lucide-react';
 import { t } from '@/lib/i18n';
+import Link from 'next/link';
 
 // Disable caching to ensure fresh data
 export const dynamic = 'force-dynamic';
@@ -18,26 +19,23 @@ export default async function DashboardPage() {
     .eq('id', user!.id)
     .single();
 
-  // Fetch real stats with optimized queries
-  const { count: productsCount } = await supabase
-    .from('products')
-    .select('*', { count: 'exact', head: true });
+  // Parallelize all independent queries
+  const [
+    { count: productsCount },
+    { count: warehousesCount },
+    { count: activeOrdersCount },
+    { data: revenueData },
+  ] = await Promise.all([
+    supabase.from('products').select('*', { count: 'exact', head: true }),
+    supabase.from('warehouses').select('*', { count: 'exact', head: true }),
+    supabase
+      .from('orders')
+      .select('*', { count: 'exact', head: true })
+      .in('status', ['pending', 'processing', 'shipped']),
+    supabase.rpc('get_total_revenue'),
+  ]);
 
-  const { count: warehousesCount } = await supabase
-    .from('warehouses')
-    .select('*', { count: 'exact', head: true });
-
-  const { count: activeOrdersCount } = await supabase
-    .from('orders')
-    .select('*', { count: 'exact', head: true })
-    .in('status', ['pending', 'processing', 'shipped']);
-
-  const { data: deliveredOrders } = await supabase
-    .from('orders')
-    .select('total_amount')
-    .eq('status', 'delivered');
-
-  const totalRevenue = deliveredOrders?.reduce((sum, order) => sum + (order.total_amount || 0), 0) || 0;
+  const totalRevenue = revenueData || 0;
 
   return (
     <div className="max-w-7xl mx-auto">
@@ -112,13 +110,13 @@ export default async function DashboardPage() {
 
 function QuickLink({ href, title, description }: { href: string; title: string; description: string }) {
   return (
-    <a
+    <Link
       href={href}
       className="block p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-600 hover:shadow-md transition-all"
     >
       <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">{title}</h3>
       <p className="text-sm text-gray-600 dark:text-gray-400">{description}</p>
-    </a>
+    </Link>
   );
 }
 
