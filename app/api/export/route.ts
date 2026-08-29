@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { checkRateLimit, getRateLimitHeaders } from '@/lib/rate-limit';
+import { canAccessExportFormat } from '@/lib/plan-limits';
 import ExcelJS from 'exceljs';
 
 export const dynamic = 'force-dynamic';
@@ -46,6 +47,16 @@ function escapeCSV(value: any): string {
     return `"${str.replace(/"/g, '""')}"`;
   }
   return str;
+}
+
+function escapeXML(value: any): string {
+  if (value === null || value === undefined) return '';
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
 }
 
 function generateProductsCSV(products: any[]): string {
@@ -107,6 +118,103 @@ function generateOrdersCSV(orders: any[]): string {
   });
 
   return csv;
+}
+
+function generateProducts1C(products: any[]): string {
+  let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+  xml += '<КоммерческаяИнформация ВерсияСхемы="2.10" ДатаФормирования="' + new Date().toISOString() + '">\n';
+  xml += '  <Каталог>\n';
+  xml += '    <Ид>catalog-products</Ид>\n';
+  xml += '    <Наименование>Məhsullar Kataloqu</Наименование>\n';
+  xml += '    <Товары>\n';
+
+  products.forEach((product) => {
+    xml += '      <Товар>\n';
+    xml += '        <Ид>' + escapeXML(product.sku) + '</Ид>\n';
+    xml += '        <Наименование>' + escapeXML(product.name) + '</Наименование>\n';
+    if (product.barcode) {
+      xml += '        <Штрихкод>' + escapeXML(product.barcode) + '</Штрихкод>\n';
+    }
+    if (product.variant) {
+      xml += '        <Вариант>' + escapeXML(product.variant) + '</Вариант>\n';
+    }
+    xml += '        <БазоваяЕдиница>' + escapeXML(product.unit) + '</БазоваяЕдиница>\n';
+    xml += '        <Цены>\n';
+    xml += '          <Цена>\n';
+    xml += '            <ИдТипаЦены>cost</ИдТипаЦены>\n';
+    xml += '            <ЦенаЗаЕдиницу>' + (product.cost_price || 0).toFixed(2) + '</ЦенаЗаЕдиницу>\n';
+    xml += '            <Валюта>USD</Валюта>\n';
+    xml += '          </Цена>\n';
+    xml += '          <Цена>\n';
+    xml += '            <ИдТипаЦены>sale</ИдТипаЦены>\n';
+    xml += '            <ЦенаЗаЕдиницу>' + (product.sale_price || 0).toFixed(2) + '</ЦенаЗаЕдиницу>\n';
+    xml += '            <Валюта>USD</Валюта>\n';
+    xml += '          </Цена>\n';
+    xml += '        </Цены>\n';
+    xml += '        <Статус>' + escapeXML(product.status) + '</Статус>\n';
+    xml += '      </Товар>\n';
+  });
+
+  xml += '    </Товары>\n';
+  xml += '  </Каталог>\n';
+  xml += '</КоммерческаяИнформация>\n';
+
+  return xml;
+}
+
+function generateWarehouses1C(warehouses: any[]): string {
+  let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+  xml += '<КоммерческаяИнформация ВерсияСхемы="2.10" ДатаФормирования="' + new Date().toISOString() + '">\n';
+  xml += '  <Склады>\n';
+
+  warehouses.forEach((wh) => {
+    xml += '    <Склад>\n';
+    xml += '      <Ид>' + escapeXML(wh.id) + '</Ид>\n';
+    xml += '      <Наименование>' + escapeXML(wh.name) + '</Наименование>\n';
+    xml += '      <Код>' + escapeXML(wh.code) + '</Код>\n';
+    if (wh.address) {
+      xml += '      <Адрес>' + escapeXML(wh.address) + '</Адрес>\n';
+    }
+    if (wh.city) {
+      xml += '      <Город>' + escapeXML(wh.city) + '</Город>\n';
+    }
+    if (wh.country) {
+      xml += '      <Страна>' + escapeXML(wh.country) + '</Страна>\n';
+    }
+    xml += '      <Активен>' + (wh.is_active ? 'true' : 'false') + '</Активен>\n';
+    xml += '    </Склад>\n';
+  });
+
+  xml += '  </Склады>\n';
+  xml += '</КоммерческаяИнформация>\n';
+
+  return xml;
+}
+
+function generateOrders1C(orders: any[]): string {
+  let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+  xml += '<КоммерческаяИнформация ВерсияСхемы="2.10" ДатаФормирования="' + new Date().toISOString() + '">\n';
+  xml += '  <Документы>\n';
+
+  orders.forEach((order) => {
+    xml += '    <Документ>\n';
+    xml += '      <Ид>' + escapeXML(order.order_number) + '</Ид>\n';
+    xml += '      <Номер>' + escapeXML(order.order_number) + '</Номер>\n';
+    xml += '      <Дата>' + escapeXML(order.created_at) + '</Дата>\n';
+    xml += '      <Контрагент>' + escapeXML(order.customer_name || '') + '</Контрагент>\n';
+    if (order.customer_email) {
+      xml += '      <Email>' + escapeXML(order.customer_email) + '</Email>\n';
+    }
+    xml += '      <Статус>' + escapeXML(order.status) + '</Статус>\n';
+    xml += '      <Сумма>' + (order.total_amount || 0).toFixed(2) + '</Сумма>\n';
+    xml += '      <Валюта>USD</Валюта>\n';
+    xml += '    </Документ>\n';
+  });
+
+  xml += '  </Документы>\n';
+  xml += '</КоммерческаяИнформация>\n';
+
+  return xml;
 }
 
 async function generateProductsExcel(products: any[]): Promise<Buffer> {
@@ -243,7 +351,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Authentication and authorization
+    // Authentication
     const supabase = await createClient();
     const {
       data: { user },
@@ -255,7 +363,7 @@ export async function POST(request: NextRequest) {
 
     const { data: profile } = await supabase
       .from('profiles')
-      .select('role, current_plan')
+      .select('current_plan')
       .eq('id', user.id)
       .single();
 
@@ -263,9 +371,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Profil tapılmadı' }, { status: 404 });
     }
 
-    // Check plan-based export access (all plans currently include export)
-    const { canAccessExport } = await import('@/lib/plan-limits');
-    if (!canAccessExport(profile.current_plan || 'starter')) {
+    const currentPlan = profile.current_plan || 'starter';
+
+    // Check plan-based export access (all plans include export)
+    if (!canAccessExportFormat(currentPlan, 'excel')) {
       return NextResponse.json(
         { error: 'İxrac funksiyası sizin planınızda mövcud deyil. Planınızı yüksəldin.' },
         { status: 403 }
@@ -280,8 +389,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Yanlış ixrac növü' }, { status: 400 });
     }
 
-    if (!['excel', 'csv'].includes(format)) {
+    if (!['excel', 'csv', '1c'].includes(format)) {
       return NextResponse.json({ error: 'Yanlış format' }, { status: 400 });
+    }
+
+    // Check if format is allowed for current plan
+    if (!canAccessExportFormat(currentPlan, format as any)) {
+      return NextResponse.json(
+        {
+          error: format === '1c'
+            ? '1C XML ixrac formatı Professional və ya Korporativ planlarda mövcuddur. Planınızı yüksəldin.'
+            : 'Bu ixrac formatı sizin planınızda mövcud deyil.'
+        },
+        { status: 403 }
+      );
     }
 
     let data: any[] = [];
@@ -307,6 +428,10 @@ export async function POST(request: NextRequest) {
         fileContent = generateProductsCSV(data);
         contentType = 'text/csv; charset=utf-8';
         fileExtension = 'csv';
+      } else if (format === '1c') {
+        fileContent = generateProducts1C(data);
+        contentType = 'application/xml; charset=utf-8';
+        fileExtension = 'xml';
       } else {
         fileContent = await generateProductsExcel(data);
         contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
@@ -329,6 +454,10 @@ export async function POST(request: NextRequest) {
         fileContent = generateWarehousesCSV(data);
         contentType = 'text/csv; charset=utf-8';
         fileExtension = 'csv';
+      } else if (format === '1c') {
+        fileContent = generateWarehouses1C(data);
+        contentType = 'application/xml; charset=utf-8';
+        fileExtension = 'xml';
       } else {
         fileContent = await generateWarehousesExcel(data);
         contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
@@ -351,6 +480,10 @@ export async function POST(request: NextRequest) {
         fileContent = generateOrdersCSV(data);
         contentType = 'text/csv; charset=utf-8';
         fileExtension = 'csv';
+      } else if (format === '1c') {
+        fileContent = generateOrders1C(data);
+        contentType = 'application/xml; charset=utf-8';
+        fileExtension = 'xml';
       } else {
         fileContent = await generateOrdersExcel(data);
         contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';

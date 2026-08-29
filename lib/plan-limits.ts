@@ -2,6 +2,8 @@
 
 export type PlanType = 'starter' | 'professional' | 'enterprise';
 
+export type ExportFormat = 'excel' | 'csv' | '1c';
+
 export interface PlanLimits {
   maxWarehouses: number | null; // null = unlimited
   maxProducts: number | null;
@@ -10,6 +12,7 @@ export interface PlanLimits {
   hasAdvancedReports: boolean;
   hasAPIAccess: boolean;
   hasExport: boolean;
+  allowedExportFormats: ExportFormat[];
   maxUsers: number | null;
 }
 
@@ -21,7 +24,8 @@ const PLAN_LIMITS: Record<PlanType, PlanLimits> = {
     hasAIAnalytics: false,
     hasAdvancedReports: false,
     hasAPIAccess: false,
-    hasExport: true, // Excel/CSV only
+    hasExport: true,
+    allowedExportFormats: ['excel', 'csv'], // No 1C XML
     maxUsers: 1,
   },
   professional: {
@@ -31,7 +35,8 @@ const PLAN_LIMITS: Record<PlanType, PlanLimits> = {
     hasAIAnalytics: true,
     hasAdvancedReports: true,
     hasAPIAccess: false,
-    hasExport: true, // All formats
+    hasExport: true,
+    allowedExportFormats: ['excel', 'csv', '1c'], // All formats
     maxUsers: 10,
   },
   enterprise: {
@@ -41,7 +46,8 @@ const PLAN_LIMITS: Record<PlanType, PlanLimits> = {
     hasAIAnalytics: true,
     hasAdvancedReports: true,
     hasAPIAccess: true,
-    hasExport: true, // All formats
+    hasExport: true,
+    allowedExportFormats: ['excel', 'csv', '1c'], // All formats
     maxUsers: null,
   },
 };
@@ -69,8 +75,17 @@ export function canAccessExport(currentPlan: string): boolean {
   return getPlanLimits(currentPlan).hasExport;
 }
 
+export function canAccessExportFormat(currentPlan: string, format: ExportFormat): boolean {
+  const limits = getPlanLimits(currentPlan);
+  return limits.allowedExportFormats.includes(format);
+}
+
 export function canAccessAIAnalytics(currentPlan: string): boolean {
   return getPlanLimits(currentPlan).hasAIAnalytics;
+}
+
+export function canAccessAdvancedReports(currentPlan: string): boolean {
+  return getPlanLimits(currentPlan).hasAdvancedReports;
 }
 
 export function canAccessAPIAccess(currentPlan: string): boolean {
@@ -140,4 +155,15 @@ export function shouldShowUpgradePrompt(
 
   // Show prompt when at 80% of limit
   return currentCount >= limit * 0.8;
+}
+
+export function getFeatureUpgradeMessage(feature: string): string {
+  const messages: Record<string, string> = {
+    aiAnalytics: 'AI Analitika funksiyası Professional və ya Korporativ planlarda mövcuddur.',
+    advancedReports: 'Qabaqcıl hesabatlar Professional və ya Korporativ planlarda mövcuddur.',
+    apiAccess: 'Tam API girişi yalnız Korporativ planda mövcuddur.',
+    '1cExport': '1C XML ixrac formatı Professional və ya Korporativ planlarda mövcuddur.',
+  };
+
+  return messages[feature] || 'Bu funksiya yüksək planda mövcuddur.';
 }

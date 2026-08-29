@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { authenticateApiKey } from '@/lib/api-auth';
 import { z } from 'zod';
 
 const createProductSchema = z.object({
@@ -19,10 +20,25 @@ const createProductSchema = z.object({
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
 
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // Try API key authentication first
+    const authHeader = request.headers.get('authorization');
+    let userId: string | null = null;
+
+    if (authHeader?.startsWith('Bearer wis_live_')) {
+      // API key authentication
+      const authResult = await authenticateApiKey(request);
+      if (!authResult.success) {
+        return authResult.response;
+      }
+      userId = authResult.context.userId;
+    } else {
+      // Session authentication
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      }
+      userId = user.id;
     }
 
     const { searchParams } = new URL(request.url);
@@ -103,25 +119,43 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
 
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    // Try API key authentication first
+    const authHeader = request.headers.get('authorization');
+    let userId: string | null = null;
+    let currentPlan: string = 'starter';
 
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role, current_plan')
-      .eq('id', user.id)
-      .single();
+    if (authHeader?.startsWith('Bearer wis_live_')) {
+      // API key authentication
+      const authResult = await authenticateApiKey(request);
+      if (!authResult.success) {
+        return authResult.response;
+      }
+      userId = authResult.context.userId;
+      currentPlan = authResult.context.currentPlan;
+    } else {
+      // Session authentication
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      }
+      userId = user.id;
 
-    if (!profile || (profile.role !== 'Admin' && profile.role !== 'Manager')) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role, current_plan')
+        .eq('id', user.id)
+        .single();
+
+      if (!profile || (profile.role !== 'Admin' && profile.role !== 'Manager')) {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+      }
+
+      currentPlan = profile.current_plan || 'starter';
     }
 
     // Check plan-based product limit
     const { hasReachedLimit, getUpgradeMessage } = await import('@/lib/plan-limits');
-    const currentPlan = profile.current_plan || 'starter';
 
     // Count existing products
     const { count: productCount } = await supabase
