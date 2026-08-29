@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
+  const lastManualChangeRef = useRef<number>(0);
 
   useEffect(() => {
     setMounted(true);
@@ -33,6 +34,13 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
           const serverTheme = settings.theme || 'light';
           const cachedTheme = localStorage.getItem('theme-preference');
 
+          // Check if there was a recent manual change (within last 5 seconds)
+          // If so, skip server sync to avoid overwriting user's immediate action
+          const timeSinceManualChange = Date.now() - lastManualChangeRef.current;
+          if (timeSinceManualChange < 5000) {
+            return; // Skip sync, manual change takes precedence
+          }
+
           // Only update if server theme differs from cached
           if (serverTheme !== cachedTheme) {
             localStorage.setItem('theme-preference', serverTheme);
@@ -48,28 +56,43 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     syncThemeFromServer();
 
     // Listen for theme changes from settings page
-    const handleThemeChange = (e: CustomEvent) => {
-      const theme = e.detail;
+    const handleThemeChange = (e: Event) => {
+      const customEvent = e as CustomEvent<{ theme: string; timestamp: number }>;
+      const { theme, timestamp } = customEvent.detail;
+
+      // Record timestamp of manual change
+      lastManualChangeRef.current = timestamp || Date.now();
+
+      // Store and apply theme
       localStorage.setItem('theme-preference', theme);
-      applyTheme(theme);
+      applyTheme(theme as 'light' | 'dark' | 'auto');
     };
 
     // Listen for storage events to sync theme across tabs
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'theme-preference') {
-        const theme = e.newValue as 'light' | 'dark' | 'auto' | null;
-        if (theme) {
-          applyTheme(theme);
-        }
+      if (e.key === 'theme-preference' && e.newValue) {
+        const theme = e.newValue as 'light' | 'dark' | 'auto';
+        applyTheme(theme);
       }
     };
 
-    window.addEventListener('theme-changed', handleThemeChange as EventListener);
+    // Listen for system theme changes when in auto mode
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleSystemThemeChange = () => {
+      const currentTheme = localStorage.getItem('theme-preference');
+      if (currentTheme === 'auto') {
+        applyTheme('auto');
+      }
+    };
+
+    window.addEventListener('theme-changed', handleThemeChange);
     window.addEventListener('storage', handleStorageChange);
+    mediaQuery.addEventListener('change', handleSystemThemeChange);
 
     return () => {
-      window.removeEventListener('theme-changed', handleThemeChange as EventListener);
+      window.removeEventListener('theme-changed', handleThemeChange);
       window.removeEventListener('storage', handleStorageChange);
+      mediaQuery.removeEventListener('change', handleSystemThemeChange);
     };
   }, []);
 

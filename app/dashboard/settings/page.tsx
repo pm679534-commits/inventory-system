@@ -173,10 +173,31 @@ export default function SettingsPage() {
 
     // Apply theme immediately when changed
     if (field === 'theme') {
-      applyTheme(value);
-      // Dispatch custom event to notify ThemeProvider
-      window.dispatchEvent(new CustomEvent('theme-changed', { detail: value }));
+      applyThemeInstantly(value);
     }
+  };
+
+  const applyThemeInstantly = (theme: 'light' | 'dark' | 'auto') => {
+    // Determine the actual theme to apply
+    let actualTheme: 'light' | 'dark';
+    if (theme === 'auto') {
+      actualTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    } else {
+      actualTheme = theme;
+    }
+
+    // Apply synchronously to DOM
+    if (actualTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+
+    // Store in localStorage immediately for consistency
+    localStorage.setItem('theme-preference', theme);
+
+    // Dispatch event to notify ThemeProvider (for cross-tab sync)
+    window.dispatchEvent(new CustomEvent('theme-changed', { detail: { theme, timestamp: Date.now() } }));
   };
 
   const applyTheme = (theme: 'light' | 'dark' | 'auto') => {
