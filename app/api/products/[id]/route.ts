@@ -137,7 +137,7 @@ export async function DELETE(
       .eq('id', user.id)
       .single();
 
-    if (!profile || profile.role !== 'Admin') {
+    if (!profile || !['Admin', 'Manager'].includes(profile.role)) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
@@ -148,12 +148,18 @@ export async function DELETE(
 
     if (error) {
       console.error('Error deleting product:', error);
-      return NextResponse.json({ error: 'Failed to delete product' }, { status: 500 });
+      return NextResponse.json({
+        error: 'deleteProductFailed',
+        message: error.message
+      }, { status: 500 });
     }
 
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Product DELETE error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json({
+      error: 'deleteProductFailed',
+      message: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 });
   }
 }

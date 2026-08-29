@@ -236,14 +236,22 @@ export default function ProductsPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this product?')) return;
+    if (!confirm(t('products.confirmDelete'))) return;
 
     try {
       const response = await fetch(`/api/products/${id}`, { method: 'DELETE' });
-      if (!response.ok) throw new Error('Failed to delete product');
+      const data = await response.json();
+
+      if (!response.ok) {
+        const errorMessage = data.error === 'deleteProductFailed'
+          ? t('products.deleteProductFailed')
+          : t('products.deleteProductFailed');
+        throw new Error(errorMessage);
+      }
+
       fetchProducts();
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Failed to delete product');
+      alert(err instanceof Error ? err.message : t('products.deleteProductFailed'));
     }
   };
 
@@ -276,9 +284,9 @@ export default function ProductsPage() {
 
   const getStockStatus = (product: Product) => {
     const stock = getTotalStock(product);
-    if (stock <= 0) return { label: 'Out of Stock', color: 'text-red-600 dark:text-red-400 bg-red-50' };
-    if (stock < 10) return { label: 'Low Stock', color: 'text-yellow-600 dark:text-yellow-400 bg-yellow-50' };
-    return { label: 'In Stock', color: 'text-green-600 dark:text-green-400 bg-green-50' };
+    if (stock <= 0) return { label: t('products.outOfStock'), color: 'text-red-600 dark:text-red-400 bg-red-50' };
+    if (stock < 10) return { label: t('products.lowStock'), color: 'text-yellow-600 dark:text-yellow-400 bg-yellow-50' };
+    return { label: t('products.inStock'), color: 'text-green-600 dark:text-green-400 bg-green-50' };
   };
 
   const totalPages = Math.ceil(total / limit);
@@ -287,15 +295,15 @@ export default function ProductsPage() {
     <div className="max-w-7xl mx-auto">
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-50 mb-2">Products</h1>
-          <p className="text-gray-600 dark:text-gray-400">Manage your product inventory</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-50 mb-2">{t('products.title')}</h1>
+          <p className="text-gray-600 dark:text-gray-400">{t('products.subtitle')}</p>
         </div>
         <button
           onClick={openCreateModal}
           className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
         >
           <Plus className="w-5 h-5" />
-          Add Product
+          {t('products.addProduct')}
         </button>
       </div>
 
@@ -306,7 +314,7 @@ export default function ProductsPage() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500" />
             <input
               type="text"
-              placeholder="Search products..."
+              placeholder={t('products.searchProducts')}
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);
@@ -324,7 +332,7 @@ export default function ProductsPage() {
             }}
             className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-900 dark:text-gray-100"
           >
-            <option value="">All Categories</option>
+            <option value="">{t('products.allCategories')}</option>
             {categories.map((cat) => (
               <option key={cat.id} value={cat.id}>
                 {cat.name}
@@ -340,7 +348,7 @@ export default function ProductsPage() {
             }}
             className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-900 dark:text-gray-100"
           >
-            <option value="">All Warehouses</option>
+            <option value="">{t('products.allWarehouses')}</option>
             {warehouses.map((wh) => (
               <option key={wh.id} value={wh.id}>
                 {wh.name}
@@ -356,10 +364,10 @@ export default function ProductsPage() {
             }}
             className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-900 dark:text-gray-100"
           >
-            <option value="">All Status</option>
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-            <option value="discontinued">Discontinued</option>
+            <option value="">{t('products.allStatus')}</option>
+            <option value="active">{t('products.active')}</option>
+            <option value="inactive">{t('products.inactive')}</option>
+            <option value="discontinued">{t('products.discontinued')}</option>
           </select>
 
           <select
@@ -370,10 +378,10 @@ export default function ProductsPage() {
             }}
             className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-900 dark:text-gray-100"
           >
-            <option value="">All Stock Levels</option>
-            <option value="in_stock">In Stock</option>
-            <option value="low_stock">Low Stock</option>
-            <option value="out_of_stock">Out of Stock</option>
+            <option value="">{t('products.allStockLevels')}</option>
+            <option value="in_stock">{t('products.inStock')}</option>
+            <option value="low_stock">{t('products.lowStock')}</option>
+            <option value="out_of_stock">{t('products.outOfStock')}</option>
           </select>
         </div>
       </div>
@@ -389,18 +397,18 @@ export default function ProductsPage() {
         {loading ? (
           <div className="p-12 text-center">
             <div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-            <p className="mt-4 text-gray-600 dark:text-gray-400">Loading products...</p>
+            <p className="mt-4 text-gray-600 dark:text-gray-400">{t('products.loadingProducts')}</p>
           </div>
         ) : products.length === 0 ? (
           <div className="p-12 text-center">
             <Package className="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">No products found</h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-4">Get started by creating your first product</p>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">{t('products.noProducts')}</h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-4">{t('products.createFirst')}</p>
             <button
               onClick={openCreateModal}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
             >
-              Add Product
+              {t('products.addProduct')}
             </button>
           </div>
         ) : (
@@ -410,25 +418,25 @@ export default function ProductsPage() {
                 <thead className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Product
+                      {t('products.product')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      SKU / Barcode
+                      {t('products.skuBarcode')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Category
+                      {t('products.category')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Price
+                      {t('products.price')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Stock
+                      {t('products.stock')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Status
+                      {t('products.status')}
                     </th>
                     <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Actions
+                      {t('products.actions')}
                     </th>
                   </tr>
                 </thead>
@@ -461,7 +469,7 @@ export default function ProductsPage() {
                             ${product.sale_price.toFixed(2)}
                           </div>
                           <div className="text-sm text-gray-500 dark:text-gray-400">
-                            Cost: ${product.cost_price.toFixed(2)}
+                            {t('products.cost')}: ${product.cost_price.toFixed(2)}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -478,13 +486,13 @@ export default function ProductsPage() {
                           <span
                             className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
                               product.status === 'active'
-                                ? 'bg-green-100 text-green-800'
+                                ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
                                 : product.status === 'inactive'
-                                ? 'bg-gray-100 dark:bg-gray-800 text-gray-800'
-                                : 'bg-red-100 text-red-800'
+                                ? 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-400'
+                                : 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400'
                             }`}
                           >
-                            {product.status}
+                            {t(`products.${product.status}`)}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -545,7 +553,7 @@ export default function ProductsPage() {
           <div className="bg-white dark:bg-gray-800 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6 border-b border-gray-200 dark:border-gray-700">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                {editingProduct ? 'Edit Product' : 'Add Product'}
+                {editingProduct ? t('products.editProduct') : t('products.addProduct')}
               </h2>
             </div>
 

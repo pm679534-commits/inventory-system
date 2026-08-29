@@ -121,6 +121,8 @@ export const az = {
     addProduct: 'Məhsul əlavə et',
     editProduct: 'Məhsulu redaktə et',
     deleteProduct: 'Məhsulu sil',
+    confirmDelete: 'Bu məhsulu silmək istəyirsiniz?',
+    deleteProductFailed: 'Məhsulu silmək uğursuz oldu',
     productName: 'Məhsul adı',
     sku: 'SKU',
     barcode: 'Barkod',
@@ -148,6 +150,13 @@ export const az = {
     allStatus: 'Bütün statuslar',
     allStockLevels: 'Bütün stok səviyyələri',
     searchProducts: 'Məhsulları axtar...',
+    loadingProducts: 'Məhsullar yüklənir...',
+    product: 'Məhsul',
+    skuBarcode: 'SKU / Barkod',
+    price: 'Qiymət',
+    status: 'Status',
+    actions: 'Əməliyyatlar',
+    cost: 'Maya',
   },
 
   // Warehouses
@@ -251,6 +260,8 @@ export const az = {
     generateReport: 'Hesabat yarat',
     startDate: 'Başlanğıc tarixi',
     endDate: 'Bitmə tarixi',
+    warehouse: 'Anbar',
+    allWarehouses: 'Bütün anbarlar',
     reportPeriod: 'Hesabat dövrü',
     last7Days: '7 Gün',
     last30Days: '30 Gün',
@@ -281,6 +292,18 @@ export const az = {
     cancellationRate: 'Ləğv etmə faizi',
     generatingReport: 'Hesabat yaradılır...',
     printReport: 'Hesabatı çap et',
+    deliveredOrders: 'çatdırılmış sifariş',
+    pending: 'gözləyən',
+    totalUnitsDelivered: 'Ümumi çatdırılmış vahidlər',
+    cancelled: 'ləğv edilmiş',
+    total: 'Ümumi',
+    delivered: 'Çatdırılmış',
+    inStock: 'Stokda',
+    lowStock: 'Az stok',
+    productsWithLessThan10Units: 'Az stoklu məhsullar (10 vahiddən az)',
+    productsNotInStock: 'Stokda olmayan məhsullar',
+    reserved: 'Ehtiyat',
+    available: 'Mövcud',
   },
 
   // Analytics
@@ -303,6 +326,12 @@ export const az = {
     aiInsights: 'AI Təhlillər',
     error: 'Xəta',
     forbidden: 'Bu məzmunu görmək icazəniz yoxdur',
+  },
+
+  // Profile
+  profile: {
+    title: 'Profil',
+    subtitle: 'Hesab məlumatlarınızı idarə edin',
   },
 
   // Settings

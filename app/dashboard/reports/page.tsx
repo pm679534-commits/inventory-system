@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { FileText, TrendingUp, Package, ShoppingCart, AlertTriangle, Download } from 'lucide-react';
+import { t } from '@/lib/i18n';
 
 interface ReportData {
   period: {
@@ -109,8 +110,8 @@ export default function ReportsPage() {
   return (
     <div className="max-w-7xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-50 mb-2">Reports</h1>
-        <p className="text-gray-600 dark:text-gray-400">Generate and view inventory reports</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-50 mb-2">{t('reports.title')}</h1>
+        <p className="text-gray-600 dark:text-gray-400">{t('reports.subtitle')}</p>
       </div>
 
       {/* Filters */}
@@ -118,7 +119,7 @@ export default function ReportsPage() {
         <div className="flex flex-wrap items-end gap-4">
           <div className="flex-1 min-w-[200px]">
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Start Date
+              {t('reports.startDate')}
             </label>
             <input
               type="date"
@@ -130,7 +131,7 @@ export default function ReportsPage() {
 
           <div className="flex-1 min-w-[200px]">
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              End Date
+              {t('reports.endDate')}
             </label>
             <input
               type="date"
@@ -142,14 +143,14 @@ export default function ReportsPage() {
 
           <div className="flex-1 min-w-[200px]">
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Warehouse
+              {t('reports.warehouse')}
             </label>
             <select
               value={warehouseId}
               onChange={(e) => setWarehouseId(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-gray-100"
             >
-              <option value="">All Warehouses</option>
+              <option value="">{t('reports.allWarehouses')}</option>
               {warehouses.map((wh) => (
                 <option key={wh.id} value={wh.id}>
                   {wh.name}
@@ -163,19 +164,19 @@ export default function ReportsPage() {
               onClick={() => setQuickRange(7)}
               className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-300"
             >
-              7 Days
+              {t('reports.last7Days')}
             </button>
             <button
               onClick={() => setQuickRange(30)}
               className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-300"
             >
-              30 Days
+              {t('reports.last30Days')}
             </button>
             <button
               onClick={() => setQuickRange(90)}
               className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-300"
             >
-              90 Days
+              {t('reports.last90Days')}
             </button>
           </div>
         </div>
@@ -190,45 +191,45 @@ export default function ReportsPage() {
       {loading ? (
         <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-12 text-center">
           <div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-          <p className="mt-4 text-gray-600 dark:text-gray-400">Generating report...</p>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">{t('reports.generatingReport')}</p>
         </div>
       ) : reportData ? (
         <div className="space-y-6">
           {/* Summary Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <StatCard
-              title="Total Revenue"
+              title={t('reports.totalRevenue')}
               value={`$${reportData.sales.totalRevenue.toLocaleString()}`}
               icon={<TrendingUp className="w-6 h-6" />}
               color="green"
-              subtitle={`${reportData.orders.fulfilledOrders} delivered orders`}
+              subtitle={`${reportData.orders.fulfilledOrders} ${t('reports.deliveredOrders')}`}
             />
             <StatCard
-              title="Total Orders"
+              title={t('reports.totalOrders')}
               value={reportData.orders.totalOrders.toString()}
               icon={<ShoppingCart className="w-6 h-6" />}
               color="blue"
-              subtitle={`${reportData.orders.pendingOrders} pending`}
+              subtitle={`${reportData.orders.pendingOrders} ${t('reports.pending')}`}
             />
             <StatCard
-              title="Units Sold"
+              title={t('reports.unitsSold')}
               value={reportData.sales.totalSold.toLocaleString()}
               icon={<Package className="w-6 h-6" />}
               color="purple"
-              subtitle="Total units delivered"
+              subtitle={t('reports.totalUnitsDelivered')}
             />
             <StatCard
-              title="Fulfillment Rate"
+              title={t('reports.fulfillmentRate')}
               value={`${reportData.orders.fulfillmentRate.toFixed(1)}%`}
               icon={<FileText className="w-6 h-6" />}
               color="orange"
-              subtitle={`${reportData.orders.cancelledOrders} cancelled`}
+              subtitle={`${reportData.orders.cancelledOrders} ${t('reports.cancelled')}`}
             />
           </div>
 
           {/* Stock Summary */}
           <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Stock Summary</h2>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">{t('reports.stockSummary')}</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
                 <div className="flex items-center gap-3 mb-2">
@@ -236,15 +237,15 @@ export default function ReportsPage() {
                     <Package className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Total Stock</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">{t('reports.totalStock')}</p>
                     <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                       {reportData.stock.totalStock.toLocaleString()}
                     </p>
                   </div>
                 </div>
                 <div className="text-sm text-gray-600 dark:text-gray-400">
-                  <p>Reserved: {reportData.stock.reservedStock.toLocaleString()}</p>
-                  <p>Available: {reportData.stock.availableStock.toLocaleString()}</p>
+                  <p>{t('reports.reserved')}: {reportData.stock.reservedStock.toLocaleString()}</p>
+                  <p>{t('reports.available')}: {reportData.stock.availableStock.toLocaleString()}</p>
                 </div>
               </div>
 
@@ -254,14 +255,14 @@ export default function ReportsPage() {
                     <AlertTriangle className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Low Stock Items</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">{t('reports.lowStockItems')}</p>
                     <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
                       {reportData.stock.lowStockCount}
                     </p>
                   </div>
                 </div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Products with less than 10 units available
+                  {t('reports.productsWithLessThan10Units')}
                 </p>
               </div>
 
@@ -271,14 +272,14 @@ export default function ReportsPage() {
                     <AlertTriangle className="w-6 h-6 text-red-600 dark:text-red-400" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Out of Stock</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">{t('reports.outOfStock')}</p>
                     <p className="text-2xl font-bold text-red-600 dark:text-red-400">
                       {reportData.stock.outOfStockCount}
                     </p>
                   </div>
                 </div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Products with no available stock
+                  {t('reports.productsNotInStock')}
                 </p>
               </div>
             </div>
@@ -286,64 +287,64 @@ export default function ReportsPage() {
 
           {/* Orders Breakdown */}
           <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Orders Breakdown</h2>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">{t('reports.ordersBreakdown')}</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="text-center p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
                 <p className="text-3xl font-bold text-yellow-600 dark:text-yellow-400">
                   {reportData.orders.pendingOrders}
                 </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Pending</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{t('reports.pending')}</p>
               </div>
               <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
                 <p className="text-3xl font-bold text-green-600 dark:text-green-400">
                   {reportData.orders.fulfilledOrders}
                 </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Delivered</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{t('reports.delivered')}</p>
               </div>
               <div className="text-center p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
                 <p className="text-3xl font-bold text-red-600 dark:text-red-400">
                   {reportData.orders.cancelledOrders}
                 </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Cancelled</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{t('reports.cancelled')}</p>
               </div>
               <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                 <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
                   {reportData.orders.totalOrders}
                 </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Total</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{t('reports.total')}</p>
               </div>
             </div>
           </div>
 
           {/* Sales Metrics */}
           <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Sales Metrics</h2>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">{t('reports.salesMetrics')}</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="border-l-4 border-green-500 pl-4">
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Total Revenue</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('reports.totalRevenue')}</p>
                 <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
                   ${reportData.sales.totalRevenue.toLocaleString()}
                 </p>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                  From delivered orders only
+                  {t('reports.fromDeliveredOrders')}
                 </p>
               </div>
               <div className="border-l-4 border-blue-500 pl-4">
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Average Order Value</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('reports.averageOrderValue')}</p>
                 <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
                   ${reportData.sales.averageOrderValue.toLocaleString()}
                 </p>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                  Per order average
+                  {t('reports.perOrderAverage')}
                 </p>
               </div>
               <div className="border-l-4 border-purple-500 pl-4">
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Units Sold</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('reports.unitsSold')}</p>
                 <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
                   {reportData.sales.totalSold.toLocaleString()}
                 </p>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                  Total products delivered
+                  {t('reports.totalDelivered')}
                 </p>
               </div>
             </div>
@@ -351,29 +352,29 @@ export default function ReportsPage() {
 
           {/* Stock vs Sales */}
           <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Inventory Health</h2>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">{t('reports.inventoryHealth')}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Stock Status</h3>
+                <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">{t('reports.stockStatus')}</h3>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Total Products</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('reports.totalProducts')}</span>
                     <span className="font-medium dark:text-gray-200">{reportData.stock.totalProducts}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">In Stock</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('reports.inStock')}</span>
                     <span className="font-medium text-green-600 dark:text-green-400">
                       {reportData.stock.totalProducts - reportData.stock.outOfStockCount}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Low Stock</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('reports.lowStock')}</span>
                     <span className="font-medium text-yellow-600 dark:text-yellow-400">
                       {reportData.stock.lowStockCount}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Out of Stock</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('reports.outOfStock')}</span>
                     <span className="font-medium text-red-600 dark:text-red-400">
                       {reportData.stock.outOfStockCount}
                     </span>
@@ -382,16 +383,16 @@ export default function ReportsPage() {
               </div>
 
               <div>
-                <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Order Performance</h3>
+                <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">{t('reports.orderPerformance')}</h3>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Fulfillment Rate</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('reports.fulfillmentRate')}</span>
                     <span className="font-medium text-green-600 dark:text-green-400">
                       {reportData.orders.fulfillmentRate.toFixed(1)}%
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Cancellation Rate</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('reports.cancellationRate')}</span>
                     <span className="font-medium text-red-600 dark:text-red-400">
                       {reportData.orders.totalOrders > 0
                         ? ((reportData.orders.cancelledOrders / reportData.orders.totalOrders) * 100).toFixed(1)
@@ -399,7 +400,7 @@ export default function ReportsPage() {
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">Pending Orders</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('reports.pendingOrders')}</span>
                     <span className="font-medium text-yellow-600 dark:text-yellow-400">
                       {reportData.orders.pendingOrders}
                     </span>
@@ -413,7 +414,7 @@ export default function ReportsPage() {
           <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-blue-800 dark:text-blue-300 font-medium">Report Period</p>
+                <p className="text-sm text-blue-800 dark:text-blue-300 font-medium">{t('reports.reportPeriod')}</p>
                 <p className="text-sm text-blue-600 dark:text-blue-400">
                   {new Date(reportData.period.start).toLocaleDateString()} -{' '}
                   {new Date(reportData.period.end).toLocaleDateString()}
@@ -429,7 +430,7 @@ export default function ReportsPage() {
                 className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
               >
                 <Download className="w-4 h-4" />
-                Print Report
+                {t('reports.printReport')}
               </button>
             </div>
           </div>
@@ -460,15 +461,15 @@ function StatCard({
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 p-6">
+    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
       <div className="flex items-center justify-between mb-4">
         <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${colorClasses[color]}`}>
           {icon}
         </div>
       </div>
-      <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
-      <p className="text-2xl font-bold text-gray-900 mb-1">{value}</p>
-      {subtitle && <p className="text-xs text-gray-500">{subtitle}</p>}
+      <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">{title}</p>
+      <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-1">{value}</p>
+      {subtitle && <p className="text-xs text-gray-500 dark:text-gray-400">{subtitle}</p>}
     </div>
   );
 }
