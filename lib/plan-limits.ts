@@ -9,6 +9,7 @@ export interface PlanLimits {
   hasAIAnalytics: boolean;
   hasAdvancedReports: boolean;
   hasAPIAccess: boolean;
+  hasExport: boolean;
   maxUsers: number | null;
 }
 
@@ -20,6 +21,7 @@ const PLAN_LIMITS: Record<PlanType, PlanLimits> = {
     hasAIAnalytics: false,
     hasAdvancedReports: false,
     hasAPIAccess: false,
+    hasExport: true, // Excel/CSV only
     maxUsers: 1,
   },
   professional: {
@@ -29,6 +31,7 @@ const PLAN_LIMITS: Record<PlanType, PlanLimits> = {
     hasAIAnalytics: true,
     hasAdvancedReports: true,
     hasAPIAccess: false,
+    hasExport: true, // All formats
     maxUsers: 10,
   },
   enterprise: {
@@ -38,6 +41,7 @@ const PLAN_LIMITS: Record<PlanType, PlanLimits> = {
     hasAIAnalytics: true,
     hasAdvancedReports: true,
     hasAPIAccess: true,
+    hasExport: true, // All formats
     maxUsers: null,
   },
 };
@@ -59,6 +63,34 @@ export function canAccessFeature(
   }
 
   return value === null; // null means unlimited
+}
+
+export function canAccessExport(currentPlan: string): boolean {
+  return getPlanLimits(currentPlan).hasExport;
+}
+
+export function canAccessAIAnalytics(currentPlan: string): boolean {
+  return getPlanLimits(currentPlan).hasAIAnalytics;
+}
+
+export function canAccessAPIAccess(currentPlan: string): boolean {
+  return getPlanLimits(currentPlan).hasAPIAccess;
+}
+
+export function getWarehouseLimit(currentPlan: string): number | null {
+  return getPlanLimits(currentPlan).maxWarehouses;
+}
+
+export function getProductLimit(currentPlan: string): number | null {
+  return getPlanLimits(currentPlan).maxProducts;
+}
+
+export function getOrderLimit(currentPlan: string): number | null {
+  return getPlanLimits(currentPlan).maxOrdersPerMonth;
+}
+
+export function getUserLimit(currentPlan: string): number | null {
+  return getPlanLimits(currentPlan).maxUsers;
 }
 
 export function hasReachedLimit(

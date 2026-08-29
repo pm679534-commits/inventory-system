@@ -44,12 +44,21 @@ export async function POST(request: NextRequest) {
     // All authenticated users can access AI analytics
     const { data: profile } = await supabase
       .from('profiles')
-      .select('role')
+      .select('role, current_plan')
       .eq('id', user.id)
       .single();
 
     if (!profile) {
       return NextResponse.json({ error: 'Profil tapılmadı' }, { status: 404 });
+    }
+
+    // Check plan-based AI analytics access
+    const { canAccessAIAnalytics } = await import('@/lib/plan-limits');
+    if (!canAccessAIAnalytics(profile.current_plan || 'starter')) {
+      return NextResponse.json(
+        { error: 'AI analitika funksiyası sizin planınızda mövcud deyil. Professional və ya Enterprise plana yüksəldin.' },
+        { status: 403 }
+      );
     }
 
     // Parse and validate request

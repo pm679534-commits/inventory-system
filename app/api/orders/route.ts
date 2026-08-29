@@ -95,12 +95,34 @@ export async function POST(request: NextRequest) {
 
     const { data: profile } = await supabase
       .from('profiles')
-      .select('role')
+      .select('role, current_plan')
       .eq('id', user.id)
       .single();
 
     if (!profile || (profile.role !== 'Admin' && profile.role !== 'Manager')) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
+    // Check plan-based monthly order limit
+    const { hasReachedLimit, getUpgradeMessage } = await import('@/lib/plan-limits');
+    const currentPlan = profile.current_plan || 'starter';
+
+    // Count orders created this calendar month
+    const now = new Date();
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+    const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59).toISOString();
+
+    const { count: monthlyOrderCount } = await supabase
+      .from('orders')
+      .select('*', { count: 'exact', head: true })
+      .gte('created_at', monthStart)
+      .lte('created_at', monthEnd);
+
+    if (hasReachedLimit('maxOrdersPerMonth', monthlyOrderCount || 0, currentPlan)) {
+      return NextResponse.json(
+        { error: getUpgradeMessage('maxOrdersPerMonth', currentPlan) },
+        { status: 403 }
+      );
     }
 
     const body = await request.json();

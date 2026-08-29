@@ -255,14 +255,19 @@ export async function POST(request: NextRequest) {
 
     const { data: profile } = await supabase
       .from('profiles')
-      .select('role')
+      .select('role, current_plan')
       .eq('id', user.id)
       .single();
 
-    // Allow Admin and Manager roles to export - Staff cannot export
-    if (!profile || (profile.role !== 'Admin' && profile.role !== 'Manager')) {
+    if (!profile) {
+      return NextResponse.json({ error: 'Profil tapılmadı' }, { status: 404 });
+    }
+
+    // Check plan-based export access (all plans currently include export)
+    const { canAccessExport } = await import('@/lib/plan-limits');
+    if (!canAccessExport(profile.current_plan || 'starter')) {
       return NextResponse.json(
-        { error: 'Bu funksiya yalnız administratorlar və menecerlər üçün əlçatandır.' },
+        { error: 'İxrac funksiyası sizin planınızda mövcud deyil. Planınızı yüksəldin.' },
         { status: 403 }
       );
     }

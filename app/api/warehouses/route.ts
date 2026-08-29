@@ -48,12 +48,28 @@ export async function POST(request: NextRequest) {
 
     const { data: profile } = await supabase
       .from('profiles')
-      .select('role')
+      .select('role, current_plan')
       .eq('id', user.id)
       .single();
 
     if (!profile || (profile.role !== 'Admin' && profile.role !== 'Manager')) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
+    // Check plan-based warehouse limit
+    const { hasReachedLimit, getUpgradeMessage } = await import('@/lib/plan-limits');
+    const currentPlan = profile.current_plan || 'starter';
+
+    // Count existing warehouses
+    const { count: warehouseCount } = await supabase
+      .from('warehouses')
+      .select('*', { count: 'exact', head: true });
+
+    if (hasReachedLimit('maxWarehouses', warehouseCount || 0, currentPlan)) {
+      return NextResponse.json(
+        { error: getUpgradeMessage('maxWarehouses', currentPlan) },
+        { status: 403 }
+      );
     }
 
     const body = await request.json();

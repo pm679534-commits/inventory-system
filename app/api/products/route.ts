@@ -111,12 +111,28 @@ export async function POST(request: NextRequest) {
 
     const { data: profile } = await supabase
       .from('profiles')
-      .select('role')
+      .select('role, current_plan')
       .eq('id', user.id)
       .single();
 
     if (!profile || (profile.role !== 'Admin' && profile.role !== 'Manager')) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+    }
+
+    // Check plan-based product limit
+    const { hasReachedLimit, getUpgradeMessage } = await import('@/lib/plan-limits');
+    const currentPlan = profile.current_plan || 'starter';
+
+    // Count existing products
+    const { count: productCount } = await supabase
+      .from('products')
+      .select('*', { count: 'exact', head: true });
+
+    if (hasReachedLimit('maxProducts', productCount || 0, currentPlan)) {
+      return NextResponse.json(
+        { error: getUpgradeMessage('maxProducts', currentPlan) },
+        { status: 403 }
+      );
     }
 
     const body = await request.json();
