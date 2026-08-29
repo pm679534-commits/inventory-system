@@ -311,8 +311,8 @@ export default function WarehousesPage() {
     <div className="max-w-7xl mx-auto">
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Warehouses</h1>
-          <p className="text-gray-600">Manage warehouse locations and stock levels</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-50 mb-2">Warehouses</h1>
+          <p className="text-gray-600 dark:text-gray-400">Manage warehouse locations and stock levels</p>
         </div>
         <button
           onClick={openCreateModal}
@@ -330,15 +330,15 @@ export default function WarehousesPage() {
       )}
 
       {loading ? (
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 p-12 text-center">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-12 text-center">
           <div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-          <p className="mt-4 text-gray-600">Loading warehouses...</p>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading warehouses...</p>
         </div>
       ) : warehouses.length === 0 ? (
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 p-12 text-center">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-12 text-center">
           <Warehouse className="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">No warehouses found</h3>
-          <p className="text-gray-600 dark:text-gray-400 dark:text-gray-500 mb-4">Create your first warehouse to start managing stock</p>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">No warehouses found</h3>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">Create your first warehouse to start managing stock</p>
           <button
             onClick={openCreateModal}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
@@ -349,32 +349,32 @@ export default function WarehousesPage() {
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Warehouses List */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 overflow-hidden">
-            <div className="p-4 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900">Warehouse Locations</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Warehouse Locations</h2>
             </div>
-            <div className="divide-y divide-gray-200">
+            <div className="divide-y divide-gray-200 dark:divide-gray-700">
               {warehouses.map((warehouse) => (
                 <div
                   key={warehouse.id}
                   className={`p-4 cursor-pointer transition-colors ${
-                    selectedWarehouse?.id === warehouse.id ? 'bg-blue-50' : 'hover:bg-gray-50'
+                    selectedWarehouse?.id === warehouse.id ? 'bg-blue-50 dark:bg-blue-900/20' : 'hover:bg-gray-50 dark:hover:bg-gray-700'
                   }`}
                   onClick={() => setSelectedWarehouse(warehouse)}
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
-                        <h3 className="font-semibold text-gray-900">{warehouse.name}</h3>
+                        <h3 className="font-semibold text-gray-900 dark:text-gray-100">{warehouse.name}</h3>
                         {!warehouse.is_active && (
-                          <span className="text-xs px-2 py-0.5 bg-gray-100 dark:bg-gray-800 text-gray-600 rounded">
+                          <span className="text-xs px-2 py-0.5 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded">
                             Inactive
                           </span>
                         )}
                       </div>
-                      <p className="text-sm text-gray-600 mt-1">Code: {warehouse.code}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Code: {warehouse.code}</p>
                       {warehouse.city && (
-                        <p className="text-sm text-gray-500">{warehouse.city}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">{warehouse.city}</p>
                       )}
                     </div>
                     <div className="flex gap-1">
@@ -404,19 +404,19 @@ export default function WarehousesPage() {
           </div>
 
           {/* Stock Details */}
-          <div className="lg:col-span-2 bg-white rounded-lg border border-gray-200">
+          <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
             {selectedWarehouse ? (
               <>
-                <div className="p-6 border-b border-gray-200">
+                <div className="p-6 border-b border-gray-200 dark:border-gray-700">
                   <div className="flex items-center justify-between mb-4">
                     <div>
-                      <h2 className="text-xl font-bold text-gray-900">{selectedWarehouse.name}</h2>
-                      <p className="text-gray-600">Stock inventory</p>
+                      <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">{selectedWarehouse.name}</h2>
+                      <p className="text-gray-600 dark:text-gray-400">Stock inventory</p>
                     </div>
                     <div className="flex gap-2">
                       <button
                         onClick={openMovementsModal}
-                        className="flex items-center gap-2 px-3 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 rounded-lg hover:bg-gray-50"
+                        className="flex items-center gap-2 px-3 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
                       >
                         <History className="w-4 h-4" />
                         History
@@ -435,51 +435,51 @@ export default function WarehousesPage() {
                 {stockLoading ? (
                   <div className="p-12 text-center">
                     <div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-                    <p className="mt-4 text-gray-600">Loading stock...</p>
+                    <p className="mt-4 text-gray-600 dark:text-gray-400">Loading stock...</p>
                   </div>
                 ) : stock.length === 0 ? (
                   <div className="p-12 text-center">
                     <Package className="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">No stock items</h3>
-                    <p className="text-gray-600">This warehouse has no products in stock</p>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">No stock items</h3>
+                    <p className="text-gray-600 dark:text-gray-400">This warehouse has no products in stock</p>
                   </div>
                 ) : (
                   <div className="overflow-x-auto">
                     <table className="w-full">
-                      <thead className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200">
+                      <thead className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
                         <tr>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                             Product
                           </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                             SKU
                           </th>
-                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                             Total
                           </th>
-                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                             Reserved
                           </th>
-                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 dark:text-gray-500 uppercase tracking-wider">
+                          <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                             Available
                           </th>
                         </tr>
                       </thead>
-                      <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200">
+                      <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                         {stock.map((item) => {
                           const available = getAvailableStock(item);
                           return (
-                            <tr key={item.id} className="hover:bg-gray-50">
+                            <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                               <td className="px-6 py-4 whitespace-nowrap">
-                                <div className="text-sm font-medium text-gray-900">
+                                <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
                                   {item.product.name}
                                 </div>
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap">
-                                <div className="text-sm text-gray-600">{item.product.sku}</div>
+                                <div className="text-sm text-gray-600 dark:text-gray-400">{item.product.sku}</div>
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-right">
-                                <div className="text-sm font-medium text-gray-900">
+                                <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
                                   {item.quantity} {item.product.unit}
                                 </div>
                               </td>
@@ -512,8 +512,8 @@ export default function WarehousesPage() {
             ) : (
               <div className="p-12 text-center">
                 <Warehouse className="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Select a warehouse</h3>
-                <p className="text-gray-600">Choose a warehouse to view its stock inventory</p>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Select a warehouse</h3>
+                <p className="text-gray-600 dark:text-gray-400">Choose a warehouse to view its stock inventory</p>
               </div>
             )}
           </div>
@@ -524,15 +524,15 @@ export default function WarehousesPage() {
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white dark:bg-gray-800 rounded-lg max-w-lg w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200">
-              <h2 className="text-2xl font-bold text-gray-900">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                 {editingWarehouse ? 'Edit Warehouse' : 'Add Warehouse'}
               </h2>
             </div>
 
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Warehouse Name <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -540,12 +540,12 @@ export default function WarehousesPage() {
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-gray-100"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Warehouse Code <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -553,45 +553,45 @@ export default function WarehousesPage() {
                   required
                   value={formData.code}
                   onChange={(e) => setFormData({ ...formData, code: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-gray-100"
                   placeholder="e.g., WH001"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Address
                 </label>
                 <input
                   type="text"
                   value={formData.address}
                   onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-gray-100"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     City
                   </label>
                   <input
                     type="text"
                     value={formData.city}
                     onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-gray-100"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Country
                   </label>
                   <input
                     type="text"
                     value={formData.country}
                     onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-gray-100"
                   />
                 </div>
               </div>
@@ -604,13 +604,13 @@ export default function WarehousesPage() {
                   onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
                   className="w-4 h-4 text-blue-600 dark:text-blue-400 border-gray-300 dark:border-gray-600 rounded focus:ring-blue-500"
                 />
-                <label htmlFor="is_active" className="ml-2 text-sm text-gray-700">
+                <label htmlFor="is_active" className="ml-2 text-sm text-gray-700 dark:text-gray-300">
                   Active warehouse
                 </label>
               </div>
 
               {error && (
-                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 text-red-700 dark:text-red-400 px-4 py-3 rounded-lg">
                   {error}
                 </div>
               )}
@@ -623,7 +623,7 @@ export default function WarehousesPage() {
                     setEditingWarehouse(null);
                     setError(null);
                   }}
-                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 rounded-lg hover:bg-gray-50"
+                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
                 >
                   Cancel
                 </button>

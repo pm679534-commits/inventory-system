@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { BarChart3, TrendingUp, TrendingDown, Package, Sparkles, AlertCircle } from 'lucide-react';
+import { TrendingUp, TrendingDown, Package, Sparkles, AlertCircle } from 'lucide-react';
 import { t } from '@/lib/i18n';
 
 interface TopMover {
@@ -517,26 +517,6 @@ export default function AnalyticsPage() {
               </div>
             </div>
           )}
-        </div>
-      </div>
-
-      {/* Info Banner */}
-      <div className="mt-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
-        <div className="flex items-start gap-3">
-          <div className="w-10 h-10 bg-blue-100 dark:bg-blue-800 rounded-lg flex items-center justify-center flex-shrink-0">
-            <BarChart3 className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-          </div>
-          <div>
-            <h3 className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-1">
-              {t.analytics.aiPoweredAnalytics}
-            </h3>
-            <p className="text-sm text-blue-800 dark:text-blue-200">
-              {t.analytics.aiDescription}
-            </p>
-            <p className="text-xs text-blue-700 dark:text-blue-300 mt-2">
-              {t.analytics.aiNote}
-            </p>
-          </div>
         </div>
       </div>
     </div>

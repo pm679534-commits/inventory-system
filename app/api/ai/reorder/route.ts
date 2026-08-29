@@ -54,6 +54,7 @@ export async function POST(request: NextRequest) {
 
     // Parse and validate request
     const body = await request.json();
+    console.log('[REORDER DEBUG] Raw body received:', JSON.stringify(body));
 
     const validation = aiPredictReorderSchema.safeParse(body);
 

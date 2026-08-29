@@ -109,45 +109,45 @@ export default function ReportsPage() {
   return (
     <div className="max-w-7xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Reports</h1>
-        <p className="text-gray-600">Generate and view inventory reports</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-50 mb-2">Reports</h1>
+        <p className="text-gray-600 dark:text-gray-400">Generate and view inventory reports</p>
       </div>
 
       {/* Filters */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 p-6 mb-6">
+      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 mb-6">
         <div className="flex flex-wrap items-end gap-4">
           <div className="flex-1 min-w-[200px]">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Start Date
             </label>
             <input
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-gray-100"
             />
           </div>
 
           <div className="flex-1 min-w-[200px]">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               End Date
             </label>
             <input
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-gray-100"
             />
           </div>
 
           <div className="flex-1 min-w-[200px]">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Warehouse
             </label>
             <select
               value={warehouseId}
               onChange={(e) => setWarehouseId(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-gray-100"
             >
               <option value="">All Warehouses</option>
               {warehouses.map((wh) => (
@@ -161,19 +161,19 @@ export default function ReportsPage() {
           <div className="flex gap-2">
             <button
               onClick={() => setQuickRange(7)}
-              className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50"
+              className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-300"
             >
               7 Days
             </button>
             <button
               onClick={() => setQuickRange(30)}
-              className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50"
+              className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-300"
             >
               30 Days
             </button>
             <button
               onClick={() => setQuickRange(90)}
-              className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50"
+              className="px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-300"
             >
               90 Days
             </button>
@@ -188,9 +188,9 @@ export default function ReportsPage() {
       )}
 
       {loading ? (
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 p-12 text-center">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-12 text-center">
           <div className="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-          <p className="mt-4 text-gray-600">Generating report...</p>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">Generating report...</p>
         </div>
       ) : reportData ? (
         <div className="space-y-6">
@@ -227,22 +227,22 @@ export default function ReportsPage() {
           </div>
 
           {/* Stock Summary */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Stock Summary</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Stock Summary</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
                 <div className="flex items-center gap-3 mb-2">
                   <div className="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex items-center justify-center">
-                    <Package className="w-6 h-6 text-blue-600" />
+                    <Package className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Total Stock</p>
-                    <p className="text-2xl font-bold text-gray-900">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">Total Stock</p>
+                    <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                       {reportData.stock.totalStock.toLocaleString()}
                     </p>
                   </div>
                 </div>
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-gray-600 dark:text-gray-400">
                   <p>Reserved: {reportData.stock.reservedStock.toLocaleString()}</p>
                   <p>Available: {reportData.stock.availableStock.toLocaleString()}</p>
                 </div>
@@ -251,16 +251,16 @@ export default function ReportsPage() {
               <div>
                 <div className="flex items-center gap-3 mb-2">
                   <div className="w-12 h-12 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg flex items-center justify-center">
-                    <AlertTriangle className="w-6 h-6 text-yellow-600" />
+                    <AlertTriangle className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Low Stock Items</p>
-                    <p className="text-2xl font-bold text-yellow-600">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">Low Stock Items</p>
+                    <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
                       {reportData.stock.lowStockCount}
                     </p>
                   </div>
                 </div>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-600 dark:text-gray-400">
                   Products with less than 10 units available
                 </p>
               </div>
@@ -268,16 +268,16 @@ export default function ReportsPage() {
               <div>
                 <div className="flex items-center gap-3 mb-2">
                   <div className="w-12 h-12 bg-red-50 dark:bg-red-900/20 rounded-lg flex items-center justify-center">
-                    <AlertTriangle className="w-6 h-6 text-red-600" />
+                    <AlertTriangle className="w-6 h-6 text-red-600 dark:text-red-400" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Out of Stock</p>
-                    <p className="text-2xl font-bold text-red-600">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">Out of Stock</p>
+                    <p className="text-2xl font-bold text-red-600 dark:text-red-400">
                       {reportData.stock.outOfStockCount}
                     </p>
                   </div>
                 </div>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-gray-600 dark:text-gray-400">
                   Products with no available stock
                 </p>
               </div>
@@ -285,64 +285,64 @@ export default function ReportsPage() {
           </div>
 
           {/* Orders Breakdown */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Orders Breakdown</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Orders Breakdown</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="text-center p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
-                <p className="text-3xl font-bold text-yellow-600">
+                <p className="text-3xl font-bold text-yellow-600 dark:text-yellow-400">
                   {reportData.orders.pendingOrders}
                 </p>
-                <p className="text-sm text-gray-600 mt-1">Pending</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Pending</p>
               </div>
               <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                <p className="text-3xl font-bold text-green-600">
+                <p className="text-3xl font-bold text-green-600 dark:text-green-400">
                   {reportData.orders.fulfilledOrders}
                 </p>
-                <p className="text-sm text-gray-600 mt-1">Delivered</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Delivered</p>
               </div>
               <div className="text-center p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
-                <p className="text-3xl font-bold text-red-600">
+                <p className="text-3xl font-bold text-red-600 dark:text-red-400">
                   {reportData.orders.cancelledOrders}
                 </p>
-                <p className="text-sm text-gray-600 mt-1">Cancelled</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Cancelled</p>
               </div>
               <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                <p className="text-3xl font-bold text-blue-600">
+                <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
                   {reportData.orders.totalOrders}
                 </p>
-                <p className="text-sm text-gray-600 mt-1">Total</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">Total</p>
               </div>
             </div>
           </div>
 
           {/* Sales Metrics */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Sales Metrics</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Sales Metrics</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="border-l-4 border-green-500 pl-4">
-                <p className="text-sm text-gray-600 mb-1">Total Revenue</p>
-                <p className="text-3xl font-bold text-gray-900">
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Total Revenue</p>
+                <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
                   ${reportData.sales.totalRevenue.toLocaleString()}
                 </p>
-                <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                   From delivered orders only
                 </p>
               </div>
               <div className="border-l-4 border-blue-500 pl-4">
-                <p className="text-sm text-gray-600 mb-1">Average Order Value</p>
-                <p className="text-3xl font-bold text-gray-900">
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Average Order Value</p>
+                <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
                   ${reportData.sales.averageOrderValue.toLocaleString()}
                 </p>
-                <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                   Per order average
                 </p>
               </div>
               <div className="border-l-4 border-purple-500 pl-4">
-                <p className="text-sm text-gray-600 mb-1">Units Sold</p>
-                <p className="text-3xl font-bold text-gray-900">
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Units Sold</p>
+                <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">
                   {reportData.sales.totalSold.toLocaleString()}
                 </p>
-                <p className="text-sm text-gray-500 dark:text-gray-400 dark:text-gray-500 mt-1">
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                   Total products delivered
                 </p>
               </div>
@@ -350,31 +350,31 @@ export default function ReportsPage() {
           </div>
 
           {/* Stock vs Sales */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Inventory Health</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Inventory Health</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <h3 className="text-sm font-medium text-gray-700 mb-3">Stock Status</h3>
+                <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Stock Status</h3>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Total Products</span>
-                    <span className="font-medium">{reportData.stock.totalProducts}</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Total Products</span>
+                    <span className="font-medium dark:text-gray-200">{reportData.stock.totalProducts}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">In Stock</span>
-                    <span className="font-medium text-green-600">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">In Stock</span>
+                    <span className="font-medium text-green-600 dark:text-green-400">
                       {reportData.stock.totalProducts - reportData.stock.outOfStockCount}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Low Stock</span>
-                    <span className="font-medium text-yellow-600">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Low Stock</span>
+                    <span className="font-medium text-yellow-600 dark:text-yellow-400">
                       {reportData.stock.lowStockCount}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Out of Stock</span>
-                    <span className="font-medium text-red-600">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Out of Stock</span>
+                    <span className="font-medium text-red-600 dark:text-red-400">
                       {reportData.stock.outOfStockCount}
                     </span>
                   </div>
@@ -382,25 +382,25 @@ export default function ReportsPage() {
               </div>
 
               <div>
-                <h3 className="text-sm font-medium text-gray-700 mb-3">Order Performance</h3>
+                <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Order Performance</h3>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Fulfillment Rate</span>
-                    <span className="font-medium text-green-600">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Fulfillment Rate</span>
+                    <span className="font-medium text-green-600 dark:text-green-400">
                       {reportData.orders.fulfillmentRate.toFixed(1)}%
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Cancellation Rate</span>
-                    <span className="font-medium text-red-600">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Cancellation Rate</span>
+                    <span className="font-medium text-red-600 dark:text-red-400">
                       {reportData.orders.totalOrders > 0
                         ? ((reportData.orders.cancelledOrders / reportData.orders.totalOrders) * 100).toFixed(1)
                         : 0}%
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Pending Orders</span>
-                    <span className="font-medium text-yellow-600">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Pending Orders</span>
+                    <span className="font-medium text-yellow-600 dark:text-yellow-400">
                       {reportData.orders.pendingOrders}
                     </span>
                   </div>
@@ -410,11 +410,11 @@ export default function ReportsPage() {
           </div>
 
           {/* Period Info */}
-          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 rounded-lg p-4">
+          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-blue-800 font-medium">Report Period</p>
-                <p className="text-sm text-blue-600">
+                <p className="text-sm text-blue-800 dark:text-blue-300 font-medium">Report Period</p>
+                <p className="text-sm text-blue-600 dark:text-blue-400">
                   {new Date(reportData.period.start).toLocaleDateString()} -{' '}
                   {new Date(reportData.period.end).toLocaleDateString()}
                   {warehouseId && warehouses.find(w => w.id === warehouseId) && (
